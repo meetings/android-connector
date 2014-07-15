@@ -1,14 +1,15 @@
 package gs.meetin.connector;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,12 +18,33 @@ public class LoginEmailActivity extends ActionBarActivity {
 
     public final static String EXTRA_EMAIL = "gs.meetin.connector.LOGIN_EMAIL";
 
+    private BroadcastReceiver broadcastReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_email);
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SessionManager.ACTION_LOGIN);
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("Mtn.gs", "[Email activity]: Received login action");
+                finish();
+            }
+        };
+
+        registerReceiver(broadcastReceiver, intentFilter);
+
         setButtonListeners();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
     }
 
     private void setButtonListeners() {
@@ -66,6 +88,5 @@ public class LoginEmailActivity extends ActionBarActivity {
         }
 
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-
     }
 }

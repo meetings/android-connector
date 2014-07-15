@@ -3,10 +3,14 @@ package gs.meetin.connector;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.HashMap;
 
 public class SessionManager {
+
+    public final static String ACTION_LOGIN = "gs.meetin.connector.ACTION_LOGIN";
+    public final static String ACTION_LOGOUT = "gs.meetin.connector.ACTION_LOGOUT";
     // Shared Preferences
     SharedPreferences pref;
 
@@ -34,24 +38,27 @@ public class SessionManager {
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
     }
 
-    /**
-     * Create login session
-     * */
-    public void createLoginSession(String userId, String token, String email){
-        SharedPreferences.Editor editor = pref.edit();
-        // Storing login value as TRUE
-        editor.putBoolean(IS_LOGIN, true);
 
-        // Storing name in pref
-        editor.putString(KEY_USER_ID, userId);
+    public void signIn(String userId, String token, String email) {
+        Log.d("Mtn.gs", "Logging in");
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(SessionManager.ACTION_LOGIN);
+        _context.sendBroadcast(broadcastIntent);
 
-        // Storing email in pref
-        editor.putString(KEY_TOKEN, token);
+        saveSessionData(userId, token, email);
 
-        editor.putString(KEY_EMAIL, email);
+        startMainActivity();
+    }
 
-        // commit changes
-        editor.commit();
+    public void signOut() {
+        Log.d("Mtn.gs", "Logging out");
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(SessionManager.ACTION_LOGOUT);
+        _context.sendBroadcast(broadcastIntent);
+
+        clearSessionData();
+
+        startLoginActivity();
     }
 
     /**
@@ -62,13 +69,10 @@ public class SessionManager {
     public void checkLogin(){
         // Check login status
         if(!this.isLoggedIn()){
-            startLoginActivity();
+            signOut();
         }
     }
 
-    /**
-     * Get stored session data
-     * */
     public HashMap<String, String> getUserDetails(){
         HashMap<String, String> user = new HashMap<String, String>();
 
@@ -80,11 +84,22 @@ public class SessionManager {
         return user;
     }
 
-    /**
-     * Clear session details
-     * */
-    public void logoutUser(){
-        // Clear all login data from Shared Preferences
+    public boolean isLoggedIn(){
+        return pref.getBoolean(IS_LOGIN, false);
+    }
+
+    private void saveSessionData(String userId, String token, String email){
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putBoolean(IS_LOGIN, true);
+        editor.putString(KEY_USER_ID, userId);
+        editor.putString(KEY_TOKEN, token);
+        editor.putString(KEY_EMAIL, email);
+
+        editor.commit();
+    }
+
+    private void clearSessionData() {
         SharedPreferences.Editor editor = pref.edit();
 
         editor.putBoolean(IS_LOGIN, false);
@@ -93,27 +108,17 @@ public class SessionManager {
         editor.remove(KEY_EMAIL);
 
         editor.commit();
-
-        startLoginActivity();
     }
 
-    /**
-     * Quick check for login
-     * **/
-    public boolean isLoggedIn(){
-        return pref.getBoolean(IS_LOGIN, false);
+    private void startMainActivity() {
+        Intent connectorIntent = new Intent(_context, ConnectorActivity.class);
+        connectorIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        _context.startActivity(connectorIntent);
     }
 
     private void startLoginActivity() {
-        // After logout redirect user to Loing Activity
         Intent i = new Intent(_context, LoginEmailActivity.class);
-        // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        // Add new Flag to start new Activity
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        // Staring Login Activity
         _context.startActivity(i);
     }
 }

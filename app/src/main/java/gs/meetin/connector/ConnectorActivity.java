@@ -1,8 +1,12 @@
 package gs.meetin.connector;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +19,25 @@ import android.widget.Toast;
 public class ConnectorActivity extends ActionBarActivity {
 
     private SessionManager sessionManager;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connector);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SessionManager.ACTION_LOGOUT);
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("Mtn.gs", "[Connector activity]: Received logout action");
+                finish();
+            }
+        };
+
+        registerReceiver(broadcastReceiver, intentFilter);
 
         sessionManager = new SessionManager(this);
         sessionManager.checkLogin();
@@ -32,6 +50,12 @@ public class ConnectorActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
+    }
+
     private void setButtonListeners() {
         Button btnLogout = (Button) findViewById(R.id.buttonLogout);
         Button btnStartService = (Button) findViewById(R.id.buttonStartService);
@@ -41,7 +65,8 @@ public class ConnectorActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 stopCalendarService();
-                sessionManager.logoutUser();
+                sessionManager.signOut();
+
             }
         });
 
