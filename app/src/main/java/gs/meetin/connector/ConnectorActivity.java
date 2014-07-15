@@ -19,9 +19,17 @@ public class ConnectorActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connector);
 
-        final Context ctx = getApplicationContext();
 
-        final Intent intent = new Intent(ctx, ConnectorService.class);
+        // user is not logged in redirect him to Login Activity
+        Intent loginIntent = new Intent(this, LoginEmailActivity.class);
+        // Closing all the Activities
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        // Add new Flag to start new Activity
+        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        // Staring Login Activity
+        startActivity(loginIntent);
+
+
 
         Button startService = (Button) findViewById(R.id.buttonStartService);
         Button stopService = (Button) findViewById(R.id.buttonStopService);
@@ -29,24 +37,30 @@ public class ConnectorActivity extends ActionBarActivity {
         startService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Context ctx = getApplicationContext();
+
                 Toast.makeText(ctx, "service starting", Toast.LENGTH_SHORT).show();
 
-                ctx.startService(intent);
+                Intent serviceIntent = new Intent(ctx, ConnectorService.class);
+                ctx.startService(serviceIntent);
             }
         });
 
         stopService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Context ctx = getApplicationContext();
+
                 Toast.makeText(ctx, "service stopping", Toast.LENGTH_SHORT).show();
 
-                ctx.stopService(intent);
+                Intent serviceIntent = new Intent(ctx, ConnectorService.class);
+                ctx.stopService(serviceIntent);
             }
         });
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.connector, menu);
@@ -63,5 +77,5 @@ public class ConnectorActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }
