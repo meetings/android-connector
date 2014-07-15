@@ -1,64 +1,79 @@
 package gs.meetin.connector;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 public class ConnectorActivity extends ActionBarActivity {
+
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connector);
 
+        sessionManager = new SessionManager(this);
+        sessionManager.checkLogin();
 
-        // user is not logged in redirect him to Login Activity
-        Intent loginIntent = new Intent(this, LoginEmailActivity.class);
-        // Closing all the Activities
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        // Add new Flag to start new Activity
-        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        // Staring Login Activity
-        startActivity(loginIntent);
+        setButtonListeners();
 
+        TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
 
+        userEmail.setText(sessionManager.getUserDetails().get(SessionManager.KEY_EMAIL));
 
-        Button startService = (Button) findViewById(R.id.buttonStartService);
-        Button stopService = (Button) findViewById(R.id.buttonStopService);
+    }
 
-        startService.setOnClickListener(new View.OnClickListener() {
+    private void setButtonListeners() {
+        Button btnLogout = (Button) findViewById(R.id.buttonLogout);
+        Button btnStartService = (Button) findViewById(R.id.buttonStartService);
+        Button btnStopService = (Button) findViewById(R.id.buttonStopService);
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context ctx = getApplicationContext();
-
-                Toast.makeText(ctx, "service starting", Toast.LENGTH_SHORT).show();
-
-                Intent serviceIntent = new Intent(ctx, ConnectorService.class);
-                ctx.startService(serviceIntent);
+                stopCalendarService();
+                sessionManager.logoutUser();
             }
         });
 
-        stopService.setOnClickListener(new View.OnClickListener() {
+        btnStartService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context ctx = getApplicationContext();
+                startCalendarService();
+            }
+        });
 
-                Toast.makeText(ctx, "service stopping", Toast.LENGTH_SHORT).show();
-
-                Intent serviceIntent = new Intent(ctx, ConnectorService.class);
-                ctx.stopService(serviceIntent);
+        btnStopService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopCalendarService();
             }
         });
     }
 
+    private void startCalendarService() {
+        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
+
+        Intent serviceIntent = new Intent(this, ConnectorService.class);
+        startService(serviceIntent);
+    }
+
+
+    private void stopCalendarService() {
+        Toast.makeText(this, "service stopping", Toast.LENGTH_SHORT).show();
+
+        Intent serviceIntent = new Intent(this, ConnectorService.class);
+        stopService(serviceIntent);
+    }
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {

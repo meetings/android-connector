@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class LoginEmailActivity extends ActionBarActivity {
 
@@ -22,7 +23,7 @@ public class LoginEmailActivity extends ActionBarActivity {
     }
 
     protected void showPinRequest() {
-        String email = "tuomas.lahti+001+demo@meetin.gs";
+        String email = ((EditText) findViewById(R.id.inputEmail)).getText().toString();
 
         Intent loginIntent = new Intent(this, LoginPinActivity.class);
         loginIntent.putExtra(EXTRA_EMAIL, email);
