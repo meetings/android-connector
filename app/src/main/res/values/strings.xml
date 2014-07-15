@@ -6,4 +6,12 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_login_pin">LoginPinActivity</string>
 
+    <string name="signIn">Sign in</string>
+    <string name="signOut">Sign out</string>
+    <string name="loggedInAs">Logged in as:</string>
+    <string name="OK">OK</string>
+
+    <string name="invalid_email_title">Invalid email!</string>
+    <string name="invalid_email_message">Please use a valid email address</string>
+
 </resources>

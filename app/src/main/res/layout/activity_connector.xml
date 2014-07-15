@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logged in as:"
+        android:text="@string/loggedInAs"
         android:id="@+id/textLoggedIn"
         android:layout_centerHorizontal="true" />
 
@@ -26,7 +26,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign out"
+        android:text="@string/signOut"
         android:id="@+id/buttonLogout"
         android:layout_below="@+id/textUserEmail"
         android:layout_centerHorizontal="true" />
