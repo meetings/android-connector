@@ -62,23 +62,22 @@ public class LoginEmailActivity extends ActionBarActivity {
         String email = ((EditText) findViewById(R.id.inputEmail)).getText().toString();
 
         if (isValidEmail(email)) {
+
+            LoginHandler lh = new LoginHandler();
+
+            try {
+                lh.requestPin(email);
+            } catch (LoginException ex) {
+                showAlert(getString(R.string.pin_request_error), ex.getMessage());
+                return;
+            }
+
             Intent loginIntent = new Intent(this, LoginPinActivity.class);
             loginIntent.putExtra(EXTRA_EMAIL, email);
             startActivity(loginIntent);
+
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage(R.string.invalid_email_message)
-                   .setTitle(R.string.invalid_email_title)
-                   .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(DialogInterface dialogInterface, int i) {
-                           dialogInterface.dismiss();
-                       }
-                   });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            showAlert(getString(R.string.invalid_email_title), getString(R.string.invalid_email_message));
         }
     }
 
@@ -88,5 +87,21 @@ public class LoginEmailActivity extends ActionBarActivity {
         }
 
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void showAlert(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(message)
+                .setTitle(title)
+                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

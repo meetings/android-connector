@@ -17,6 +17,7 @@
 
 
     <!-- Alerts -->
+    <string name="pin_request_error">Error!</string>
     <string name="invalid_email_title">Invalid email!</string>
     <string name="invalid_email_message">Please use a valid email address</string>
 
