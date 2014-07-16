@@ -17,6 +17,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        production {
+            packageName: "gs.meetin.connector"
+        }
+
+        beta {
+            packageName: "gs.meetin.connector.beta"
+        }
+
+        staging {
+            packageName: "gs.meetin.connector.staging"
+        }
+    }
 }
 
 dependencies {

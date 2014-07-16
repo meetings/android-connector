@@ -17,8 +17,6 @@ import retrofit.http.POST;
 
 public class LoginHandler {
 
-    public final static String BASEURL = "https://api-dev.meetin.gs/v1";
-
     private LoginService loginService;
 
     public interface LoginService {
@@ -31,7 +29,7 @@ public class LoginHandler {
 
     public LoginHandler() {
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(BASEURL)
+                .setEndpoint(Constants.apiBaseURL)
                 .build();
 
         loginService = restAdapter.create(LoginService.class);
