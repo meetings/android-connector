@@ -14,30 +14,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import de.greenrobot.event.EventBus;
 
 
 public class ConnectorActivity extends ActionBarActivity {
 
     private SessionManager sessionManager;
-    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connector);
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SessionManager.ACTION_LOGOUT);
-
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("Mtn.gs", "[Connector activity]: Received logout action");
-                finish();
-            }
-        };
-
-        registerReceiver(broadcastReceiver, intentFilter);
+        EventBus.getDefault().register(this);
 
         sessionManager = new SessionManager(this);
         sessionManager.checkLogin();
@@ -53,7 +42,15 @@ public class ConnectorActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(ConnectorEvent event) {
+        switch (event.getType()) {
+            case ConnectorEvent.LOGOUT:
+                finish();
+                break;
+        }
     }
 
     private void setButtonListeners() {

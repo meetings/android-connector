@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import org.apache.http.message.BasicNameValuePair;
 
+import de.greenrobot.event.EventBus;
+
 public class LoginPinActivity extends ActionBarActivity {
     private String email;
 
@@ -26,18 +28,7 @@ public class LoginPinActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_pin);
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SessionManager.ACTION_LOGIN);
-
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("Mtn.gs", "[Pin activity]: Received login action");
-                finish();
-            }
-        };
-
-        registerReceiver(broadcastReceiver, intentFilter);
+        EventBus.getDefault().register(this);
 
         Intent intent = getIntent();
         email = intent.getStringExtra(LoginEmailActivity.EXTRA_EMAIL);
@@ -52,7 +43,15 @@ public class LoginPinActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(ConnectorEvent event) {
+        switch (event.getType()) {
+            case ConnectorEvent.LOGIN:
+                finish();
+                break;
+        }
     }
 
     private void setButtonListeners() {

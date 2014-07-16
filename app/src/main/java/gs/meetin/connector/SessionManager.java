@@ -7,10 +7,10 @@ import android.util.Log;
 
 import java.util.HashMap;
 
+import de.greenrobot.event.EventBus;
+
 public class SessionManager {
 
-    public final static String ACTION_LOGIN = "gs.meetin.connector.ACTION_LOGIN";
-    public final static String ACTION_LOGOUT = "gs.meetin.connector.ACTION_LOGOUT";
     // Shared Preferences
     SharedPreferences pref;
 
@@ -32,18 +32,14 @@ public class SessionManager {
 
     public static final String KEY_EMAIL = "email";
 
-    // Constructor
     public SessionManager(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
     }
 
-
     public void signIn(String userId, String token, String email) {
         Log.d("Mtn.gs", "Logging in");
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(SessionManager.ACTION_LOGIN);
-        _context.sendBroadcast(broadcastIntent);
+        EventBus.getDefault().post(new ConnectorEvent(ConnectorEvent.LOGIN));
 
         saveSessionData(userId, token, email);
 
@@ -52,9 +48,7 @@ public class SessionManager {
 
     public void signOut() {
         Log.d("Mtn.gs", "Logging out");
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(SessionManager.ACTION_LOGOUT);
-        _context.sendBroadcast(broadcastIntent);
+        EventBus.getDefault().post(new ConnectorEvent(ConnectorEvent.LOGOUT));
 
         clearSessionData();
 

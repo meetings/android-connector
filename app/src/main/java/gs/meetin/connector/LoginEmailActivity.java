@@ -14,6 +14,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import de.greenrobot.event.EventBus;
+import gs.meetin.connector.dto.LoginRequest;
+
 public class LoginEmailActivity extends ActionBarActivity {
 
     public final static String EXTRA_EMAIL = "gs.meetin.connector.LOGIN_EMAIL";
@@ -25,18 +28,7 @@ public class LoginEmailActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_email);
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(SessionManager.ACTION_LOGIN);
-
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("Mtn.gs", "[Email activity]: Received login action");
-                finish();
-            }
-        };
-
-        registerReceiver(broadcastReceiver, intentFilter);
+        EventBus.getDefault().register(this);
 
         setButtonListeners();
     }
@@ -44,7 +36,15 @@ public class LoginEmailActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEvent(ConnectorEvent event) {
+        switch (event.getType()) {
+            case ConnectorEvent.LOGIN:
+                finish();
+                break;
+        }
     }
 
     private void setButtonListeners() {
