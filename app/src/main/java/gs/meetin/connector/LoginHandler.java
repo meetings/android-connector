@@ -2,16 +2,11 @@ package gs.meetin.connector;
 
 
 
-import android.util.Log;
-
-import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import retrofit.Callback;
-import retrofit.ErrorHandler;
+import gs.meetin.connector.dto.LoginRequest;
+import gs.meetin.connector.dto.PinRequest;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -21,10 +16,10 @@ public class LoginHandler {
 
     public interface LoginService {
         @POST("/login")
-        LoginResult login(@Body LoginRequest body);
+        LoginRequest.LoginResult login(@Body LoginRequest body);
 
         @POST("/login")
-        PinResult requestPin(@Body PinRequest body);
+        PinRequest.PinResult requestPin(@Body PinRequest body);
     }
 
     public LoginHandler() {
@@ -36,59 +31,18 @@ public class LoginHandler {
     }
 
     public boolean requestPin(String email) {
-        PinResult pr = loginService.requestPin(new PinRequest(email));
+        PinRequest.PinResult pr = loginService.requestPin(new PinRequest(email));
         return true;
     }
 
     public BasicNameValuePair login(String email, String pin) {
-        LoginResult lr = loginService.login(new LoginRequest(email, pin));
-        User user = lr.result;
+        LoginRequest.LoginResult lr = loginService.login(new LoginRequest(email, pin));
+        LoginRequest.User user = lr.result;
 
         if(user == null) {
             throw new LoginException(lr.error.message);
         }
 
         return new BasicNameValuePair(user.user_id, user.token);
-    }
-
-    class LoginRequest {
-        final String email;
-        final String pin;
-
-        LoginRequest(String email, String pin) {
-            this.email = email;
-            this.pin = pin;
-        }
-    }
-
-    class LoginResult {
-        public User result;
-        public Err error;
-    }
-
-    class User {
-        public String user_id;
-        public String token;
-    }
-
-    class Err {
-        public String code;
-        public String message;
-    }
-
-    class PinRequest {
-        final String email;
-        final String include_pin;
-        final String allow_register;
-
-        PinRequest(String email) {
-            this.email = email;
-            this.include_pin = "1";
-            this.allow_register = "1";
-        }
-    }
-
-    class PinResult {
-
     }
 }
