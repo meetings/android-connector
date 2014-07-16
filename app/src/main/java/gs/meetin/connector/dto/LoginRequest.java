@@ -12,7 +12,7 @@ public class LoginRequest {
 
     public class LoginResult {
         public User result;
-        public Err error;
+        public ApiError error;
     }
 
     public class User {
@@ -20,8 +20,5 @@ public class LoginRequest {
         public String token;
     }
 
-    public class Err {
-        public String code;
-        public String message;
-    }
+
 }

@@ -13,6 +13,6 @@ public class PinRequest {
     }
 
     public class PinResult {
-
+        public ApiError error;
     }
 }

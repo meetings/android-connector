@@ -1,27 +1,25 @@
 package gs.meetin.connector;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import de.greenrobot.event.EventBus;
-import gs.meetin.connector.dto.LoginRequest;
+import gs.meetin.connector.events.ErrorEvent;
+import gs.meetin.connector.events.SessionEvent;
+import gs.meetin.connector.services.LoginHandler;
 
 public class LoginEmailActivity extends ActionBarActivity {
 
     public final static String EXTRA_EMAIL = "gs.meetin.connector.LOGIN_EMAIL";
 
-    private BroadcastReceiver broadcastReceiver;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +37,24 @@ public class LoginEmailActivity extends ActionBarActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(ConnectorEvent event) {
+    public void onEvent(SessionEvent event) {
         switch (event.getType()) {
-            case ConnectorEvent.LOGIN:
+
+            case SessionEvent.PIN_REQUEST_SUCCESSFUL:
+                Intent loginIntent = new Intent(this, LoginPinActivity.class);
+                loginIntent.putExtra(EXTRA_EMAIL, email);
+                startActivity(loginIntent);
+
+                break;
+
+            case SessionEvent.LOGIN:
                 finish();
                 break;
         }
+    }
+
+    public void onEvent(ErrorEvent event) {
+        showAlert(event.getTitle(), event.getMessage());
     }
 
     private void setButtonListeners() {
@@ -59,22 +69,12 @@ public class LoginEmailActivity extends ActionBarActivity {
     }
 
     private void showPinRequest() {
-        String email = ((EditText) findViewById(R.id.inputEmail)).getText().toString();
+        email = ((EditText) findViewById(R.id.inputEmail)).getText().toString();
 
         if (isValidEmail(email)) {
 
             LoginHandler lh = new LoginHandler();
-
-            try {
-                lh.requestPin(email);
-            } catch (LoginException ex) {
-                showAlert(getString(R.string.pin_request_error), ex.getMessage());
-                return;
-            }
-
-            Intent loginIntent = new Intent(this, LoginPinActivity.class);
-            loginIntent.putExtra(EXTRA_EMAIL, email);
-            startActivity(loginIntent);
+            lh.requestPin(email);
 
         } else {
             showAlert(getString(R.string.invalid_email_title), getString(R.string.invalid_email_message));

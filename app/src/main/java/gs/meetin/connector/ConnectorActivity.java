@@ -1,20 +1,15 @@
 package gs.meetin.connector;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import de.greenrobot.event.EventBus;
+import gs.meetin.connector.events.SessionEvent;
 
 
 public class ConnectorActivity extends ActionBarActivity {
@@ -45,9 +40,9 @@ public class ConnectorActivity extends ActionBarActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(ConnectorEvent event) {
+    public void onEvent(SessionEvent event) {
         switch (event.getType()) {
-            case ConnectorEvent.LOGOUT:
+            case SessionEvent.LOGOUT:
                 finish();
                 break;
         }
