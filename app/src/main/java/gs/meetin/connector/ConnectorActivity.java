@@ -29,8 +29,9 @@ public class ConnectorActivity extends ActionBarActivity {
         setButtonListeners();
 
         TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
-
         userEmail.setText(sessionManager.getUserDetails().get(SessionManager.KEY_EMAIL));
+
+        startCalendarService();
     }
 
     @Override
@@ -49,8 +50,7 @@ public class ConnectorActivity extends ActionBarActivity {
 
     private void setButtonListeners() {
         Button btnLogout = (Button) findViewById(R.id.buttonLogout);
-        Button btnStartService = (Button) findViewById(R.id.buttonStartService);
-        Button btnStopService = (Button) findViewById(R.id.buttonStopService);
+        Button btnSyncNow = (Button) findViewById(R.id.buttonSyncNow);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,19 +61,10 @@ public class ConnectorActivity extends ActionBarActivity {
             }
         });
 
-        btnStartService.setOnClickListener(new View.OnClickListener() {
+        btnSyncNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startCalendarService();
-
                 new CalendarManager().getEventsFromCalendar(getApplicationContext(), "Tuomas Lahti");
-            }
-        });
-
-        btnStopService.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopCalendarService();
             }
         });
     }
@@ -92,23 +83,4 @@ public class ConnectorActivity extends ActionBarActivity {
         Intent serviceIntent = new Intent(this, ConnectorService.class);
         stopService(serviceIntent);
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.connector, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 }

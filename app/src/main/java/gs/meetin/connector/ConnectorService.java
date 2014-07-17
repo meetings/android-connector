@@ -36,13 +36,11 @@ public class ConnectorService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        int i = 0;
         while (running) {
             synchronized (this) {
                 try {
-                    Log.d("Mtn.gs", "Working... " + i);
-                    i++;
-                    wait(1000);
+                    Log.d("Mtn.gs", "Syncing suggestions... ");
+                    wait((1000 * 60) * 15);
                 } catch (Exception e) {
                 }
             }
