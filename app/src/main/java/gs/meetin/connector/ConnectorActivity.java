@@ -71,7 +71,7 @@ public class ConnectorActivity extends ActionBarActivity {
         btnSyncNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<SuggestionSource> suggestionSources = new ArrayList<SuggestionSource>();//new CalendarManager().getCalendars(getApplicationContext());
+                ArrayList<SuggestionSource> suggestionSources = new CalendarManager().getCalendars(getApplicationContext());
                 String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
                 SourceContainer sourceContainer = new SourceContainer("Nexus 5", "phone", androidId, suggestionSources);
