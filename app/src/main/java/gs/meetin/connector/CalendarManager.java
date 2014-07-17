@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
+import gs.meetin.connector.dto.Attendee;
+import gs.meetin.connector.dto.CalendarSuggestion;
+import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.utils.DateHelper;
 
 public class CalendarManager {
@@ -125,6 +128,7 @@ public class CalendarManager {
             String location = cur.getString(PROJECTION_LOCATION_INDEX);
 
             String organizer = cur.getString(PROJECTION_ORGANIZER_INDEX);
+
             boolean hasAttendeeData = cur.getString(PROJECTION_ATTENDEE_DATA_INDEX).equals("1");
             String attendees = "";
 
@@ -198,109 +202,8 @@ public class CalendarManager {
             if(i.hasNext()) {
                 attendees.append(", ");
             }
-
         }
+
         return attendees.toString();
-    }
-
-    class SuggestionSource {
-
-        private String name;
-        private String idInsideContainer;
-        private boolean isPrimary;
-
-        SuggestionSource(String name, String idInsideContainer, boolean isPrimary) {
-            this.name = name;
-            this.idInsideContainer = idInsideContainer;
-            this.isPrimary = isPrimary;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getIdInsideContainer() {
-            return idInsideContainer;
-        }
-
-        public boolean isPrimary() {
-            return isPrimary;
-        }
-    }
-
-    class CalendarSuggestion {
-
-        long eventId;
-        String title;
-        long begin_epocn;
-        long end_epoch;
-        String description;
-        String location;
-        String participant_list;
-        String organizer;
-
-        CalendarSuggestion(long eventId,
-                           String title,
-                           long begin_epocn,
-                           long end_epoch,
-                           String description,
-                           String location,
-                           String participant_list,
-                           String organizer) {
-            this.eventId = eventId;
-            this.title = title;
-            this.begin_epocn = begin_epocn;
-            this.end_epoch = end_epoch;
-            this.description = description;
-            this.location = location;
-            this.participant_list = participant_list;
-            this.organizer = organizer;
-        }
-
-        public long getEventId() {
-            return eventId;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public long getBegin_epocn() {
-            return begin_epocn;
-        }
-
-        public long getEnd_epoch() {
-            return end_epoch;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public String getLocation() {
-            return location;
-        }
-
-        public String getParticipant_list() {
-            return participant_list;
-        }
-
-        public String getOrganizer() {
-            return organizer;
-        }
-    }
-
-    class Attendee {
-        private String name;
-        private String email;
-
-        Attendee(String name, String email) {
-            this.name = name;
-            this.email = email;
-        }
-
-        public String toString() {
-            return String.format("\"%s\" <%s>", name, email);
-        }
     }
 }
