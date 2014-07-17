@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="@string/syncNow"
         android:id="@+id/buttonSyncNow"
-        android:layout_below="@+id/textLoggedIn"
+        android:layout_below="@+id/textUserEmail"
         android:layout_centerHorizontal="true" />
 
     <Button

@@ -68,17 +68,6 @@ public class SessionManager {
         }
     }
 
-    public HashMap<String, String> getUserDetails(){
-        HashMap<String, String> user = new HashMap<String, String>();
-
-        user.put(KEY_USER_ID, pref.getString(KEY_USER_ID, null));
-        user.put(KEY_TOKEN, pref.getString(KEY_TOKEN, null));
-        user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
-
-        // return user
-        return user;
-    }
-
     public boolean isLoggedIn(){
         return pref.getBoolean(IS_LOGIN, false);
     }
@@ -115,5 +104,15 @@ public class SessionManager {
         Intent i = new Intent(_context, LoginEmailActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         _context.startActivity(i);
+    }
+
+    public String getUserId(){
+        return pref.getString(KEY_USER_ID, null);
+    }
+    public String getToken(){
+        return pref.getString(KEY_TOKEN, null);
+    }
+    public String getUserEmail(){
+        return pref.getString(KEY_EMAIL, null);
     }
 }

@@ -29,7 +29,7 @@ public class ConnectorActivity extends ActionBarActivity {
         setButtonListeners();
 
         TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
-        userEmail.setText(sessionManager.getUserDetails().get(SessionManager.KEY_EMAIL));
+        userEmail.setText(sessionManager.getUserEmail());
 
         startCalendarService();
     }
