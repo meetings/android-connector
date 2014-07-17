@@ -18,19 +18,19 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
-public class LoginHandler {
+public class Login {
 
     private LoginService loginService;
 
     public interface LoginService {
         @POST("/login")
-        void login(@Body LoginRequest body, Callback<LoginRequest.LoginResult> cb);
+        void login(@Body LoginRequest body, Callback<LoginRequest> cb);
 
         @POST("/login")
-        void requestPin(@Body PinRequest body, Callback<PinRequest.PinResult> cb);
+        void requestPin(@Body PinRequest body, Callback<PinRequest> cb);
     }
 
-    public LoginHandler() {
+    public Login() {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(Constants.apiBaseURL)
                 .build();
@@ -39,9 +39,9 @@ public class LoginHandler {
     }
 
     public void requestPin(String email) {
-        loginService.requestPin(new PinRequest(email), new Callback<PinRequest.PinResult>() {
+        loginService.requestPin(new PinRequest(email), new Callback<PinRequest>() {
             @Override
-            public void success(PinRequest.PinResult pinResult, Response response) {
+            public void success(PinRequest pinResult, Response response) {
                 if(pinResult.error != null) {
                     EventBus.getDefault().post(new ErrorEvent("Sorry!", pinResult.error.message));
                     return;
@@ -58,9 +58,9 @@ public class LoginHandler {
     }
 
     public void login(String email, String pin) {
-        loginService.login(new LoginRequest(email, pin), new Callback<LoginRequest.LoginResult>() {
+        loginService.login(new LoginRequest(email, pin), new Callback<LoginRequest>() {
             @Override
-            public void success(LoginRequest.LoginResult loginResult, Response response) {
+            public void success(LoginRequest loginResult, Response response) {
                 if(loginResult.error != null) {
                     EventBus.getDefault().post(new ErrorEvent("Sorry!", loginResult.error.message));
                     return;

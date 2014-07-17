@@ -14,7 +14,7 @@ import android.widget.TextView;
 import de.greenrobot.event.EventBus;
 import gs.meetin.connector.events.ErrorEvent;
 import gs.meetin.connector.events.SessionEvent;
-import gs.meetin.connector.services.LoginHandler;
+import gs.meetin.connector.services.Login;
 
 public class LoginPinActivity extends ActionBarActivity {
     private String email;
@@ -77,7 +77,7 @@ public class LoginPinActivity extends ActionBarActivity {
     private void signIn() {
         String pin = ((EditText) findViewById(R.id.inputPin)).getText().toString();
 
-        LoginHandler lh = new LoginHandler();
+        Login lh = new Login();
         lh.login(email, pin);
     }
 

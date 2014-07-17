@@ -13,7 +13,7 @@ import android.widget.EditText;
 import de.greenrobot.event.EventBus;
 import gs.meetin.connector.events.ErrorEvent;
 import gs.meetin.connector.events.SessionEvent;
-import gs.meetin.connector.services.LoginHandler;
+import gs.meetin.connector.services.Login;
 
 public class LoginEmailActivity extends ActionBarActivity {
 
@@ -73,7 +73,7 @@ public class LoginEmailActivity extends ActionBarActivity {
 
         if (isValidEmail(email)) {
 
-            LoginHandler lh = new LoginHandler();
+            Login lh = new Login();
             lh.requestPin(email);
 
         } else {
