@@ -7,7 +7,11 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.util.Log;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
+
+import gs.meetin.connector.utils.DateHelper;
 
 public class CalendarManager {
 
@@ -30,7 +34,7 @@ public class CalendarManager {
             CalendarContract.Events.DTEND                          // 5
     };
 
-    // The indices for the projection array above.
+    // The indices for the projection arrays above.
     private static final int PROJECTION_ID_INDEX = 0;
 
     // Calendar indices
@@ -46,28 +50,19 @@ public class CalendarManager {
 
     public void listCalendars(Context context) {
         Log.d("Mtn.gs", "------- Reading calendars...");
-        // Run query
-        Cursor cur = null;
+
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Calendars.CONTENT_URI;
         String selection = "(" + CalendarContract.Calendars.VISIBLE + " = 1)";
-        // Submit the query and get a Cursor object back.
-        cur = cr.query(uri, CALENDAR_PROJECTION, selection, null, null);
+
+        Cursor cur = cr.query(uri, CALENDAR_PROJECTION, selection, null, null);
 
         Log.d("Mtn.gs", "Found "+ cur.getCount() + " calendars");
 
-        // Use the cursor to step through the returned records
         while (cur.moveToNext()) {
-            long calID = 0;
-            String displayName = null;
-            String accountName = null;
-
-            // Get the field values
-            calID = cur.getLong(PROJECTION_ID_INDEX);
-            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
-            accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
-
-            // Do something with the values...
+            long calID = cur.getLong(PROJECTION_ID_INDEX);
+            String displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
+            String accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
 
             Log.d("Mtn.gs", "------- Found calendar");
             Log.d("Mtn.gs", "CalId:" + calID);
@@ -78,8 +73,7 @@ public class CalendarManager {
 
     public void listEventsFromCalendar(Context context, String calendarName) {
         Log.d("Mtn.gs", "------- Reading events from " + calendarName);
-        // Run query
-        Cursor cur = null;
+
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Events.CONTENT_URI;
         String selection = "((" + CalendarContract.Events.VISIBLE + " = 1) AND ("
@@ -87,32 +81,24 @@ public class CalendarManager {
                                 + CalendarContract.Events.DTSTART + " > ?) AND ("
                                 + CalendarContract.Events.DTEND + " < ?))";
 
-        long today = new Date().getTime();
+        DateTime todayDateTime = DateHelper.today();
+        String today = Long.toString(todayDateTime.getMillis());
+        String threeMonthsFromNow = Long.toString(todayDateTime.plusMonths(3).getMillis());
 
-        String[] selectionArgs = new String[] { calendarName, new Date().getTime() + "" };
-        // Submit the query and get a Cursor object back.
-        cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+        String[] selectionArgs = new String[] { calendarName, today, threeMonthsFromNow };
+
+        Cursor cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
 
         Log.d("Mtn.gs", "Found "+ cur.getCount() + " events");
 
-        // Use the cursor to step through the returned records
+
         while (cur.moveToNext()) {
-            long evtID = 0;
-            String title = null;
-            String organizer = null;
-            String hasAttendeeData = null;
-            long startDate = 0;
-            long endDate = 0;
-
-            // Get the field values
-            evtID = cur.getLong(PROJECTION_ID_INDEX);
-            title = cur.getString(PROJECTION_TITLE_INDEX);
-            organizer = cur.getString(PROJECTION_ORGANIZER_INDEX);
-            hasAttendeeData = cur.getString(PROJECTION_ATTENDEE_DATA_INDEX);
-            startDate = cur.getLong(PROJECTION_DTSTART_INDEX);
-            endDate = cur.getLong(PROJECTION_DTEND_INDEX);
-
-            // Do something with the values...
+            long evtID = cur.getLong(PROJECTION_ID_INDEX);
+            String title = cur.getString(PROJECTION_TITLE_INDEX);
+            String organizer = cur.getString(PROJECTION_ORGANIZER_INDEX);
+            String hasAttendeeData = cur.getString(PROJECTION_ATTENDEE_DATA_INDEX);
+            long startDate = cur.getLong(PROJECTION_DTSTART_INDEX);
+            long endDate = cur.getLong(PROJECTION_DTEND_INDEX);
 
             Log.d("Mtn.gs", "------- Found event");
             Log.d("Mtn.gs", "CalId:" + evtID);

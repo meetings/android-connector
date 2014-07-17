@@ -38,4 +38,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:19.+'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'de.greenrobot:eventbus:2.2.1'
+    compile 'joda-time:joda-time:2.3'
 }
