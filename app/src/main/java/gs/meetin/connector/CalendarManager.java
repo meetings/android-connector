@@ -9,47 +9,61 @@ import android.util.Log;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import gs.meetin.connector.utils.DateHelper;
 
 public class CalendarManager {
 
-    // Projection array. Creating indices for this array instead of doing
+    // Projection arrays. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     public static final String[] CALENDAR_PROJECTION = new String[] {
             CalendarContract.Calendars._ID,                           // 0
-            CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
-            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME          // 2
+            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 1
+            CalendarContract.Calendars.IS_PRIMARY                     // 2
     };
 
-    // Projection array. Creating indices for this array instead of doing
-    // dynamic lookups improves performance.
     public static final String[] EVENT_PROJECTION = new String[] {
-            CalendarContract.Events._ID,                           // 0
-            CalendarContract.Events.TITLE,                         // 1
-            CalendarContract.Events.HAS_ATTENDEE_DATA,             // 2
-            CalendarContract.Events.ORGANIZER,                     // 3
-            CalendarContract.Events.DTSTART,                       // 4
-            CalendarContract.Events.DTEND                          // 5
+            CalendarContract.Events._ID,                              // 0
+            CalendarContract.Events.TITLE,                            // 1
+            CalendarContract.Events.HAS_ATTENDEE_DATA,                // 2
+            CalendarContract.Events.ORGANIZER,                        // 3
+            CalendarContract.Events.DTSTART,                          // 4
+            CalendarContract.Events.DTEND,                            // 5
+            CalendarContract.Events.DESCRIPTION,                      // 6
+            CalendarContract.Events.EVENT_LOCATION                    // 7
+    };
+
+    public static final String[] ATTENDEE_PROJECTION = new String[] {
+            CalendarContract.Attendees._ID,                           // 0
+            CalendarContract.Attendees.ATTENDEE_NAME,                 // 1
+            CalendarContract.Attendees.ATTENDEE_EMAIL                 // 2
     };
 
     // The indices for the projection arrays above.
     private static final int PROJECTION_ID_INDEX = 0;
 
     // Calendar indices
-    private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
-    private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
+    private static final int PROJECTION_DISPLAY_NAME_INDEX = 1;
+    private static final int PROJECTION_IS_PRIMARY_INDEX   = 2;
 
     // Event indices
-    private static final int PROJECTION_TITLE_INDEX = 1;
+    private static final int PROJECTION_TITLE_INDEX         = 1;
     private static final int PROJECTION_ATTENDEE_DATA_INDEX = 2;
-    private static final int PROJECTION_ORGANIZER_INDEX = 3;
-    private static final int PROJECTION_DTSTART_INDEX = 4;
-    private static final int PROJECTION_DTEND_INDEX = 5;
+    private static final int PROJECTION_ORGANIZER_INDEX     = 3;
+    private static final int PROJECTION_DTSTART_INDEX       = 4;
+    private static final int PROJECTION_DTEND_INDEX         = 5;
+    private static final int PROJECTION_DESCRIPTION_INDEX   = 6;
+    private static final int PROJECTION_LOCATION_INDEX      = 7;
 
-    public void listCalendars(Context context) {
-        Log.d("Mtn.gs", "------- Reading calendars...");
+    // Attendee indices
+    private static final int PROJECTION_ATTENDEE_NAME_INDEX  = 1;
+    private static final int PROJECTION_ATTENDEE_EMAIL_INDEX = 2;
+
+    public ArrayList<SuggestionSource> getCalendars(Context context) {
+        Log.d("Mtn.gs", "Reading calendars...");
 
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Calendars.CONTENT_URI;
@@ -59,20 +73,27 @@ public class CalendarManager {
 
         Log.d("Mtn.gs", "Found "+ cur.getCount() + " calendars");
 
-        while (cur.moveToNext()) {
-            long calID = cur.getLong(PROJECTION_ID_INDEX);
-            String displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
-            String accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
+        ArrayList<SuggestionSource> sources = new ArrayList<SuggestionSource>();
 
-            Log.d("Mtn.gs", "------- Found calendar");
-            Log.d("Mtn.gs", "CalId:" + calID);
+        while (cur.moveToNext()) {
+            long calId = cur.getLong(PROJECTION_ID_INDEX);
+            String displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
+            boolean isPrimary = cur.getString(PROJECTION_IS_PRIMARY_INDEX).equals("1");
+
+            Log.d("Mtn.gs", "CalId:" + calId);
             Log.d("Mtn.gs", "displayname:" + displayName);
-            Log.d("Mtn.gs", "accountname:" + accountName);
+            Log.d("Mtn.gs", "is primary:" + isPrimary);
+
+            SuggestionSource source = new SuggestionSource(displayName, displayName, isPrimary);
+
+            sources.add(source);
         }
+
+        return sources;
     }
 
-    public void listEventsFromCalendar(Context context, String calendarName) {
-        Log.d("Mtn.gs", "------- Reading events from " + calendarName);
+    public ArrayList<CalendarSuggestion> getEventsFromCalendar(Context context, String calendarName) {
+        Log.d("Mtn.gs", "Reading events from " + calendarName);
 
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Events.CONTENT_URI;
@@ -91,23 +112,195 @@ public class CalendarManager {
 
         Log.d("Mtn.gs", "Found "+ cur.getCount() + " events");
 
+         ArrayList<CalendarSuggestion> suggestions = new ArrayList<CalendarSuggestion>();
 
         while (cur.moveToNext()) {
-            long evtID = cur.getLong(PROJECTION_ID_INDEX);
+            long evtId = cur.getLong(PROJECTION_ID_INDEX);
             String title = cur.getString(PROJECTION_TITLE_INDEX);
-            String organizer = cur.getString(PROJECTION_ORGANIZER_INDEX);
-            String hasAttendeeData = cur.getString(PROJECTION_ATTENDEE_DATA_INDEX);
+
             long startDate = cur.getLong(PROJECTION_DTSTART_INDEX);
             long endDate = cur.getLong(PROJECTION_DTEND_INDEX);
 
+            String description = cur.getString(PROJECTION_DESCRIPTION_INDEX);
+            String location = cur.getString(PROJECTION_LOCATION_INDEX);
+
+            String organizer = cur.getString(PROJECTION_ORGANIZER_INDEX);
+            boolean hasAttendeeData = cur.getString(PROJECTION_ATTENDEE_DATA_INDEX).equals("1");
+            String attendees = "";
+
+            if(hasAttendeeData) {
+                ArrayList<Attendee> attendeeList = getAttendeesForEvent(context, evtId);
+                attendees = attendeeListToString(attendeeList);
+            }
+
             Log.d("Mtn.gs", "------- Found event");
-            Log.d("Mtn.gs", "CalId:" + evtID);
+            Log.d("Mtn.gs", "evtId:" + evtId);
             Log.d("Mtn.gs", "title:" + title);
-            Log.d("Mtn.gs", "organizer:" + organizer);
-            Log.d("Mtn.gs", "has attendee data:" + hasAttendeeData);
             Log.d("Mtn.gs", "start:" + startDate);
-            Log.d("Mtn.gs", "startdate:" + new Date(startDate));
             Log.d("Mtn.gs", "end:" + endDate);
+            Log.d("Mtn.gs", "organizer:" + organizer);
+            Log.d("Mtn.gs", "attendees:" + attendees);
+
+
+            CalendarSuggestion suggestion = new CalendarSuggestion(evtId,
+                                                                   title,
+                                                                   startDate / 1000,
+                                                                   endDate / 1000,
+                                                                   description,
+                                                                   location,
+                                                                   attendees,
+                                                                   organizer);
+
+            suggestions.add(suggestion);
+        }
+
+        return suggestions;
+    }
+
+    private ArrayList<Attendee> getAttendeesForEvent(Context context, long eventId) {
+        Log.d("Mtn.gs", "Reading attendees for " + eventId);
+
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = CalendarContract.Attendees.CONTENT_URI;
+        String selection = "(" + CalendarContract.Attendees.EVENT_ID + " = ?)";
+
+        String[] selectionArgs = new String[] { Long.toString(eventId) };
+
+        Cursor cur = cr.query(uri, ATTENDEE_PROJECTION, selection, selectionArgs, null);
+
+        Log.d("Mtn.gs", "Found "+ cur.getCount() + " attendees");
+
+        ArrayList<Attendee> attendees = new ArrayList<Attendee>();
+
+        while (cur.moveToNext()) {
+            long attId = cur.getLong(PROJECTION_ID_INDEX);
+            String attendeeName = cur.getString(PROJECTION_ATTENDEE_NAME_INDEX);
+            String attendeeEmail = cur.getString(PROJECTION_ATTENDEE_EMAIL_INDEX);
+
+            Log.d("Mtn.gs", "attId:" + attId);
+            Log.d("Mtn.gs", "attendee:" + attendeeName);
+            Log.d("Mtn.gs", "email:" + attendeeEmail);
+
+            Attendee attendee = new Attendee(attendeeName, attendeeEmail);
+
+            attendees.add(attendee);
+        }
+
+        return attendees;
+    }
+
+    private String attendeeListToString(ArrayList<Attendee> attendeeList) {
+        StringBuilder attendees = new StringBuilder();
+
+        for(Iterator<Attendee> i = attendeeList.iterator(); i.hasNext();) {
+            attendees.append(i.next().toString());
+
+            if(i.hasNext()) {
+                attendees.append(", ");
+            }
+
+        }
+        return attendees.toString();
+    }
+
+    class SuggestionSource {
+
+        private String name;
+        private String idInsideContainer;
+        private boolean isPrimary;
+
+        SuggestionSource(String name, String idInsideContainer, boolean isPrimary) {
+            this.name = name;
+            this.idInsideContainer = idInsideContainer;
+            this.isPrimary = isPrimary;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getIdInsideContainer() {
+            return idInsideContainer;
+        }
+
+        public boolean isPrimary() {
+            return isPrimary;
+        }
+    }
+
+    class CalendarSuggestion {
+
+        long eventId;
+        String title;
+        long begin_epocn;
+        long end_epoch;
+        String description;
+        String location;
+        String participant_list;
+        String organizer;
+
+        CalendarSuggestion(long eventId,
+                           String title,
+                           long begin_epocn,
+                           long end_epoch,
+                           String description,
+                           String location,
+                           String participant_list,
+                           String organizer) {
+            this.eventId = eventId;
+            this.title = title;
+            this.begin_epocn = begin_epocn;
+            this.end_epoch = end_epoch;
+            this.description = description;
+            this.location = location;
+            this.participant_list = participant_list;
+            this.organizer = organizer;
+        }
+
+        public long getEventId() {
+            return eventId;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public long getBegin_epocn() {
+            return begin_epocn;
+        }
+
+        public long getEnd_epoch() {
+            return end_epoch;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public String getParticipant_list() {
+            return participant_list;
+        }
+
+        public String getOrganizer() {
+            return organizer;
+        }
+    }
+
+    class Attendee {
+        private String name;
+        private String email;
+
+        Attendee(String name, String email) {
+            this.name = name;
+            this.email = email;
+        }
+
+        public String toString() {
+            return String.format("\"%s\" <%s>", name, email);
         }
     }
 }

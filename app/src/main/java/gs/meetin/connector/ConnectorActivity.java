@@ -66,7 +66,7 @@ public class ConnectorActivity extends ActionBarActivity {
             public void onClick(View view) {
                 //startCalendarService();
 
-                new CalendarManager().listEventsFromCalendar(getApplicationContext(), "Tuomas Lahti");
+                new CalendarManager().getEventsFromCalendar(getApplicationContext(), "Tuomas Lahti");
             }
         });
 
