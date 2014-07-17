@@ -3,28 +3,28 @@ package gs.meetin.connector.dto;
 public class CalendarSuggestion {
     long eventId;
     String title;
-    long begin_epocn;
-    long end_epoch;
+    long beginEpoch;
+    long endEpoch;
     String description;
     String location;
-    String participant_list;
+    String participantList;
     String organizer;
 
     public CalendarSuggestion(long eventId,
                        String title,
-                       long begin_epocn,
-                       long end_epoch,
+                       long beginEpoch,
+                       long endEpoch,
                        String description,
                        String location,
-                       String participant_list,
+                       String participantList,
                        String organizer) {
         this.eventId = eventId;
         this.title = title;
-        this.begin_epocn = begin_epocn;
-        this.end_epoch = end_epoch;
+        this.beginEpoch = beginEpoch;
+        this.endEpoch = endEpoch;
         this.description = description;
         this.location = location;
-        this.participant_list = participant_list;
+        this.participantList = participantList;
         this.organizer = organizer;
     }
 
@@ -36,12 +36,12 @@ public class CalendarSuggestion {
         return title;
     }
 
-    public long getBegin_epocn() {
-        return begin_epocn;
+    public long getBeginEpoch() {
+        return beginEpoch;
     }
 
-    public long getEnd_epoch() {
-        return end_epoch;
+    public long getEndEpoch() {
+        return endEpoch;
     }
 
     public String getDescription() {
@@ -52,8 +52,8 @@ public class CalendarSuggestion {
         return location;
     }
 
-    public String getParticipant_list() {
-        return participant_list;
+    public String getParticipantList() {
+        return participantList;
     }
 
     public String getOrganizer() {

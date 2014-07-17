@@ -1,8 +1,5 @@
 package gs.meetin.connector.dto;
 
-/**
- * Created by tuomaslahti on 17/07/14.
- */
 public class SuggestionSource {
 
     private String name;
@@ -23,7 +20,7 @@ public class SuggestionSource {
         return idInsideContainer;
     }
 
-    public boolean isPrimary() {
+    public boolean getIsPrimary() {
         return isPrimary;
     }
 }
