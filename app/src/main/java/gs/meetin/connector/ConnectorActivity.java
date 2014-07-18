@@ -15,9 +15,12 @@ import gs.meetin.connector.adapters.SessionAdapter;
 import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
+import gs.meetin.connector.events.SuggestionEvent;
 import gs.meetin.connector.services.SuggestionService;
 import gs.meetin.connector.utils.Device;
 import retrofit.RestAdapter;
+
+import static gs.meetin.connector.events.Event.EventType.UPDATE_SOURCES;
 
 
 public class ConnectorActivity extends ActionBarActivity {
@@ -60,6 +63,19 @@ public class ConnectorActivity extends ActionBarActivity {
         }
     }
 
+    public void onEvent(SuggestionEvent event) {
+        switch (event.getType()) {
+
+            case UPDATE_SOURCES:
+                updateSuggestionSources();
+                break;
+
+            case UPDATE_SUGGESTIONS:
+                updateSuggestions();
+                break;
+        }
+    }
+
     private void setButtonListeners() {
         Button btnLogout = (Button) findViewById(R.id.buttonLogout);
         Button btnSyncNow = (Button) findViewById(R.id.buttonSyncNow);
@@ -75,14 +91,7 @@ public class ConnectorActivity extends ActionBarActivity {
         btnSyncNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<SuggestionSource> suggestionSources = new CalendarManager().getCalendars(getApplicationContext());
-
-                String containerName = Device.getDeviceName();
-                String androidId = Device.getAndroidId(getContentResolver());
-
-                SourceContainer sourceContainer = new SourceContainer(containerName, "phone", androidId, suggestionSources);
-
-                suggestionService.updateSources(sourceContainer);
+                EventBus.getDefault().post(new SuggestionEvent(UPDATE_SOURCES));
             }
         });
     }
@@ -94,11 +103,25 @@ public class ConnectorActivity extends ActionBarActivity {
         startService(serviceIntent);
     }
 
-
     private void stopCalendarService() {
         Toast.makeText(this, "service stopping", Toast.LENGTH_SHORT).show();
 
         Intent serviceIntent = new Intent(this, ConnectorService.class);
         stopService(serviceIntent);
+    }
+
+    private void updateSuggestionSources() {
+        ArrayList<SuggestionSource> suggestionSources = new CalendarManager().getCalendars(getApplicationContext());
+
+        String containerName = Device.getDeviceName();
+        String androidId = Device.getAndroidId(getContentResolver());
+
+        SourceContainer sourceContainer = new SourceContainer(containerName, "phone", androidId, suggestionSources);
+
+        suggestionService.updateSources(sourceContainer);
+    }
+
+    private void updateSuggestions() {
+        // TODO
     }
 }

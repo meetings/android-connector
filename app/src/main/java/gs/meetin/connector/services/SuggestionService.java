@@ -15,6 +15,8 @@ import gs.meetin.connector.dto.CalendarSuggestion;
 import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.ErrorEvent;
+import gs.meetin.connector.events.Event;
+import gs.meetin.connector.events.SuggestionEvent;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -24,6 +26,8 @@ import retrofit.converter.GsonConverter;
 import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.Path;
+
+import static gs.meetin.connector.events.Event.EventType.UPDATE_SUGGESTIONS;
 
 public class SuggestionService {
 
@@ -48,13 +52,21 @@ public class SuggestionService {
         suggestionService.updateSources(userId, sourceContainer, new Callback<SourceContainer>() {
             @Override
             public void success(SourceContainer result, Response response) {
-                ApiError r = result.error;
-                Log.d("Mtn.gs", "Update successful");
+
+                if(result.error != null) {
+                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.error.message));
+                    return;
+                }
+
+                Log.d("Mtn.gs", "Updated sources successful");
+                EventBus.getDefault().post(new SuggestionEvent(UPDATE_SUGGESTIONS));
+
+
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                Log.e("Mtn.gs", error.getMessage());
             }
         });
     }
