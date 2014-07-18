@@ -6,7 +6,6 @@ import android.util.Log;
 import org.apache.http.message.BasicNameValuePair;
 
 import de.greenrobot.event.EventBus;
-import gs.meetin.connector.Constants;
 import gs.meetin.connector.dto.LoginRequest;
 import gs.meetin.connector.dto.PinRequest;
 import gs.meetin.connector.events.ErrorEvent;
@@ -17,6 +16,9 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
+
+import static gs.meetin.connector.events.Event.EventType.LOGIN_SUCCESSFUL;
+import static gs.meetin.connector.events.Event.EventType.PIN_REQUEST_SUCCESSFUL;
 
 public class LoginService {
 
@@ -37,13 +39,13 @@ public class LoginService {
     public void requestPin(String email) {
         loginService.requestPin(new PinRequest(email), new Callback<PinRequest>() {
             @Override
-            public void success(PinRequest pinResult, Response response) {
-                if(pinResult.error != null) {
-                    EventBus.getDefault().post(new ErrorEvent("Sorry!", pinResult.error.message));
+            public void success(PinRequest result, Response response) {
+                if(result.error != null) {
+                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.error.message));
                     return;
                 }
 
-                EventBus.getDefault().post(new SessionEvent(SessionEvent.PIN_REQUEST_SUCCESSFUL));
+                EventBus.getDefault().post(new SessionEvent(PIN_REQUEST_SUCCESSFUL));
             }
 
             @Override
@@ -56,16 +58,16 @@ public class LoginService {
     public void login(String email, String pin) {
         loginService.login(new LoginRequest(email, pin), new Callback<LoginRequest>() {
             @Override
-            public void success(LoginRequest loginResult, Response response) {
-                if(loginResult.error != null) {
-                    EventBus.getDefault().post(new ErrorEvent("Sorry!", loginResult.error.message));
+            public void success(LoginRequest result, Response response) {
+                if(result.error != null) {
+                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.error.message));
                     return;
                 }
 
-                LoginRequest.User user = loginResult.result;
-                BasicNameValuePair userData =  new BasicNameValuePair(user.user_id, user.token);
+                LoginRequest.User user = result.result;
+                BasicNameValuePair userData =  new BasicNameValuePair(user.userId, user.token);
 
-                EventBus.getDefault().post(new SessionEvent(SessionEvent.LOGIN_SUCCESSFUL, userData));
+                EventBus.getDefault().post(new SessionEvent(LOGIN_SUCCESSFUL, userData));
             }
 
             @Override

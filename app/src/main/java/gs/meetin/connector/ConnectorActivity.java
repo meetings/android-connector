@@ -2,9 +2,7 @@ package gs.meetin.connector;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,10 +11,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import gs.meetin.connector.adapters.SessionAdapter;
 import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
-import gs.meetin.connector.adapters.SessionAdapter;
 import gs.meetin.connector.services.SuggestionService;
 import gs.meetin.connector.utils.Device;
 import retrofit.RestAdapter;
@@ -56,7 +54,7 @@ public class ConnectorActivity extends ActionBarActivity {
 
     public void onEvent(SessionEvent event) {
         switch (event.getType()) {
-            case SessionEvent.LOGOUT:
+            case LOGOUT:
                 finish();
                 break;
         }
@@ -71,7 +69,6 @@ public class ConnectorActivity extends ActionBarActivity {
             public void onClick(View view) {
                 stopCalendarService();
                 sessionManager.signOut();
-
             }
         });
 

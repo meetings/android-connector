@@ -51,13 +51,13 @@ public class LoginPinActivity extends ActionBarActivity {
     public void onEvent(SessionEvent event) {
         switch (event.getType()) {
 
-            case SessionEvent.LOGIN_SUCCESSFUL:
+            case LOGIN_SUCCESSFUL:
                 SessionManager sessionManager = new SessionManager(this);
                 sessionManager.signIn(event.getUser().getName(), event.getUser().getValue(), email);
 
                 break;
 
-            case SessionEvent.LOGIN:
+            case LOGIN:
                 finish();
                 break;
         }

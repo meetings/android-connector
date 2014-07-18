@@ -13,6 +13,7 @@ import android.widget.EditText;
 import de.greenrobot.event.EventBus;
 import gs.meetin.connector.adapters.LoginAdapter;
 import gs.meetin.connector.events.ErrorEvent;
+import gs.meetin.connector.events.Event;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.services.LoginService;
 import retrofit.RestAdapter;
@@ -46,14 +47,14 @@ public class LoginEmailActivity extends ActionBarActivity {
     public void onEvent(SessionEvent event) {
         switch (event.getType()) {
 
-            case SessionEvent.PIN_REQUEST_SUCCESSFUL:
+            case PIN_REQUEST_SUCCESSFUL:
                 Intent loginIntent = new Intent(this, LoginPinActivity.class);
                 loginIntent.putExtra(EXTRA_EMAIL, email);
                 startActivity(loginIntent);
 
                 break;
 
-            case SessionEvent.LOGIN:
+            case LOGIN:
                 finish();
                 break;
         }

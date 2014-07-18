@@ -8,11 +8,13 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Objects;
 
+import de.greenrobot.event.EventBus;
 import gs.meetin.connector.Constants;
 import gs.meetin.connector.dto.ApiError;
 import gs.meetin.connector.dto.CalendarSuggestion;
 import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionSource;
+import gs.meetin.connector.events.ErrorEvent;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;

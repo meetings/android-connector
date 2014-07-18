@@ -5,10 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import java.util.HashMap;
-
 import de.greenrobot.event.EventBus;
 import gs.meetin.connector.events.SessionEvent;
+
+import static gs.meetin.connector.events.Event.EventType.LOGIN;
+import static gs.meetin.connector.events.Event.EventType.LOGOUT;
 
 public class SessionManager {
 
@@ -40,7 +41,7 @@ public class SessionManager {
 
     public void signIn(String userId, String token, String email) {
         Log.d("Mtn.gs", "Logging in");
-        EventBus.getDefault().post(new SessionEvent(SessionEvent.LOGIN));
+        EventBus.getDefault().post(new SessionEvent(LOGIN));
 
         saveSessionData(userId, token, email);
 
@@ -49,7 +50,7 @@ public class SessionManager {
 
     public void signOut() {
         Log.d("Mtn.gs", "Logging out");
-        EventBus.getDefault().post(new SessionEvent(SessionEvent.LOGOUT));
+        EventBus.getDefault().post(new SessionEvent(LOGOUT));
 
         clearSessionData();
 
