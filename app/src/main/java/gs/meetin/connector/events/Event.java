@@ -1,6 +1,6 @@
 package gs.meetin.connector.events;
 
-public class Event {
+public abstract class Event {
     public static enum EventType {
         // Login
         LOGIN,
