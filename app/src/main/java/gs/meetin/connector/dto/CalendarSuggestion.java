@@ -11,13 +11,13 @@ public class CalendarSuggestion {
     String organizer;
 
     public CalendarSuggestion(long eventId,
-                       String title,
-                       long beginEpoch,
-                       long endEpoch,
-                       String description,
-                       String location,
-                       String participantList,
-                       String organizer) {
+                              String title,
+                              long beginEpoch,
+                              long endEpoch,
+                              String description,
+                              String location,
+                              String participantList,
+                              String organizer) {
         this.eventId = eventId;
         this.title = title;
         this.beginEpoch = beginEpoch;
