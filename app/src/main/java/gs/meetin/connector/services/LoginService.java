@@ -18,11 +18,11 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
-public class Login {
+public class LoginService {
 
-    private LoginService loginService;
+    private LoginRouter loginService;
 
-    public interface LoginService {
+    public interface LoginRouter {
         @POST("/login")
         void login(@Body LoginRequest body, Callback<LoginRequest> cb);
 
@@ -30,12 +30,8 @@ public class Login {
         void requestPin(@Body PinRequest body, Callback<PinRequest> cb);
     }
 
-    public Login() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(Constants.apiBaseURL)
-                .build();
-
-        loginService = restAdapter.create(LoginService.class);
+    public LoginService(RestAdapter restAdapter) {
+        loginService = restAdapter.create(LoginRouter.class);
     }
 
     public void requestPin(String email) {

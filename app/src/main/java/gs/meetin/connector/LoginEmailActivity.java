@@ -11,15 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import de.greenrobot.event.EventBus;
+import gs.meetin.connector.adapters.LoginAdapter;
 import gs.meetin.connector.events.ErrorEvent;
 import gs.meetin.connector.events.SessionEvent;
-import gs.meetin.connector.services.Login;
+import gs.meetin.connector.services.LoginService;
+import retrofit.RestAdapter;
 
 public class LoginEmailActivity extends ActionBarActivity {
 
     public final static String EXTRA_EMAIL = "gs.meetin.connector.LOGIN_EMAIL";
 
     private String email;
+    private LoginService loginService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,9 @@ public class LoginEmailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_login_email);
 
         EventBus.getDefault().register(this);
+
+        RestAdapter loginAdapter = LoginAdapter.build();
+        loginService = new LoginService(loginAdapter);
 
         setButtonListeners();
     }
@@ -72,9 +78,7 @@ public class LoginEmailActivity extends ActionBarActivity {
         email = ((EditText) findViewById(R.id.inputEmail)).getText().toString();
 
         if (isValidEmail(email)) {
-
-            Login lh = new Login();
-            lh.requestPin(email);
+            loginService.requestPin(email);
 
         } else {
             showAlert(getString(R.string.invalid_email_title), getString(R.string.invalid_email_message));
@@ -82,11 +86,7 @@ public class LoginEmailActivity extends ActionBarActivity {
     }
 
     private boolean isValidEmail(CharSequence email) {
-        if (email == null) {
-            return false;
-        }
-
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void showAlert(String title, String message) {

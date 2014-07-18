@@ -1,7 +1,6 @@
 package gs.meetin.connector;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +11,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
+import gs.meetin.connector.adapters.LoginAdapter;
 import gs.meetin.connector.events.ErrorEvent;
 import gs.meetin.connector.events.SessionEvent;
-import gs.meetin.connector.services.Login;
+import gs.meetin.connector.services.LoginService;
+import retrofit.RestAdapter;
 
 public class LoginPinActivity extends ActionBarActivity {
-    private String email;
 
-    private BroadcastReceiver broadcastReceiver;
+    private String email;
+    private LoginService loginService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,9 @@ public class LoginPinActivity extends ActionBarActivity {
         setContentView(R.layout.activity_login_pin);
 
         EventBus.getDefault().register(this);
+
+        RestAdapter loginAdapter = LoginAdapter.build();
+        loginService = new LoginService(loginAdapter);
 
         Intent intent = getIntent();
         email = intent.getStringExtra(LoginEmailActivity.EXTRA_EMAIL);
@@ -77,8 +81,7 @@ public class LoginPinActivity extends ActionBarActivity {
     private void signIn() {
         String pin = ((EditText) findViewById(R.id.inputPin)).getText().toString();
 
-        Login lh = new Login();
-        lh.login(email, pin);
+        loginService.login(email, pin);
     }
 
     private void showAlert(String title, String message) {
