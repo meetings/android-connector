@@ -92,6 +92,8 @@ public class CalendarManager {
             sources.add(source);
         }
 
+        cur.close();
+
         return sources;
     }
 
@@ -158,6 +160,8 @@ public class CalendarManager {
             suggestions.add(suggestion);
         }
 
+        cur.close();
+
         return suggestions;
     }
 
@@ -189,6 +193,8 @@ public class CalendarManager {
 
             attendees.add(attendee);
         }
+
+        cur.close();
 
         return attendees;
     }
