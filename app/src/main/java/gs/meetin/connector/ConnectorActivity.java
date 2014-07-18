@@ -41,7 +41,7 @@ public class ConnectorActivity extends ActionBarActivity {
         userEmail.setText(sessionManager.getUserEmail());
 
         RestAdapter sessionAdapter = SessionAdapter.build(sessionManager.getUserId(), sessionManager.getToken());
-        suggestionService = new SuggestionService(sessionAdapter);
+        suggestionService = new SuggestionService(sessionAdapter, sessionManager.getUserId());
 
         startCalendarService();
     }

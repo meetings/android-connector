@@ -16,7 +16,7 @@ public class LoginRequest {
     }
 
     public class User {
-        public String user_id;
+        public String userId;
         public String token;
     }
 }

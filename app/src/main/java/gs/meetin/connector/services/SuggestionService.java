@@ -39,8 +39,9 @@ public class SuggestionService {
 
     }
 
-    public SuggestionService(RestAdapter restAdapter) {
+    public SuggestionService(RestAdapter restAdapter, String userId) {
         suggestionService = restAdapter.create(SuggestionRouter.class);
+        this.userId = userId;
     }
 
     public void updateSources(SourceContainer sourceContainer) {
