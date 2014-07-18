@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,12 +15,15 @@ import de.greenrobot.event.EventBus;
 import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
-import gs.meetin.connector.services.Suggestion;
+import gs.meetin.connector.adapters.SessionAdapter;
+import gs.meetin.connector.services.SuggestionService;
+import retrofit.RestAdapter;
 
 
 public class ConnectorActivity extends ActionBarActivity {
 
     private SessionManager sessionManager;
+    private SuggestionService suggestionService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,10 @@ public class ConnectorActivity extends ActionBarActivity {
 
         TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
         userEmail.setText(sessionManager.getUserEmail());
+
+        RestAdapter sessionAdapter = SessionAdapter.build(sessionManager.getUserId(), sessionManager.getToken());
+        suggestionService = new SuggestionService(sessionAdapter);
+
 
         startCalendarService();
     }
@@ -76,10 +82,7 @@ public class ConnectorActivity extends ActionBarActivity {
 
                 SourceContainer sourceContainer = new SourceContainer("Nexus 5", "phone", androidId, suggestionSources);
 
-                Suggestion s = new Suggestion(sessionManager.getUserId(), sessionManager.getToken());
-
-                s.updateSources(sourceContainer);
-
+                suggestionService.updateSources(sourceContainer);
             }
         });
     }
