@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.adapters.SessionAdapter;
 import gs.meetin.connector.services.SuggestionService;
+import gs.meetin.connector.utils.Device;
 import retrofit.RestAdapter;
 
 
@@ -42,7 +44,6 @@ public class ConnectorActivity extends ActionBarActivity {
 
         RestAdapter sessionAdapter = SessionAdapter.build(sessionManager.getUserId(), sessionManager.getToken());
         suggestionService = new SuggestionService(sessionAdapter);
-
 
         startCalendarService();
     }
@@ -78,9 +79,11 @@ public class ConnectorActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 ArrayList<SuggestionSource> suggestionSources = new CalendarManager().getCalendars(getApplicationContext());
-                String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                SourceContainer sourceContainer = new SourceContainer("Nexus 5", "phone", androidId, suggestionSources);
+                String containerName = Device.getDeviceName();
+                String androidId = Device.getAndroidId(getContentResolver());
+
+                SourceContainer sourceContainer = new SourceContainer(containerName, "phone", androidId, suggestionSources);
 
                 suggestionService.updateSources(sourceContainer);
             }
