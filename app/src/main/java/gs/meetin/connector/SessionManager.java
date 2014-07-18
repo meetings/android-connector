@@ -17,7 +17,7 @@ public class SessionManager {
     SharedPreferences pref;
 
     // Context
-    Context _context;
+    Context context;
 
     // Shared pref mode
     int PRIVATE_MODE = 0;
@@ -35,8 +35,8 @@ public class SessionManager {
     public static final String KEY_EMAIL = "email";
 
     public SessionManager(Context context){
-        this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        this.context = context;
+        pref = this.context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
     }
 
     public void signIn(String userId, String token, String email) {
@@ -96,15 +96,15 @@ public class SessionManager {
     }
 
     private void startMainActivity() {
-        Intent connectorIntent = new Intent(_context, ConnectorActivity.class);
+        Intent connectorIntent = new Intent(context, ConnectorActivity.class);
         connectorIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        _context.startActivity(connectorIntent);
+        context.startActivity(connectorIntent);
     }
 
     private void startLoginActivity() {
-        Intent i = new Intent(_context, LoginEmailActivity.class);
+        Intent i = new Intent(context, LoginEmailActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        _context.startActivity(i);
+        context.startActivity(i);
     }
 
     public String getUserId(){

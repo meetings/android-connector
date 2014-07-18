@@ -7,9 +7,17 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import de.greenrobot.event.EventBus;
+import gs.meetin.connector.events.SuggestionEvent;
+
+import static gs.meetin.connector.events.Event.EventType.UPDATE_SOURCES;
+
 public class ConnectorService extends IntentService {
 
     private boolean running = false;
+
+    private SessionManager sessionManager;
+    private SuggestionManager suggestionManager;
 
     public ConnectorService() {
         super("ConnectorService");
@@ -19,6 +27,13 @@ public class ConnectorService extends IntentService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("Mtn.gs", "Starting service...");
         running = true;
+
+        sessionManager = new SessionManager(this);
+
+        suggestionManager = new SuggestionManager(this, sessionManager);
+
+        EventBus.getDefault().register(this);
+
         return super.onStartCommand(intent,flags,startId);
     }
 
@@ -31,6 +46,7 @@ public class ConnectorService extends IntentService {
     public void onDestroy() {
         Log.d("Mtn.gs", "Stopping service...");
         running = false;
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -40,10 +56,24 @@ public class ConnectorService extends IntentService {
             synchronized (this) {
                 try {
                     Log.d("Mtn.gs", "Syncing suggestions... ");
+                    EventBus.getDefault().post(new SuggestionEvent(UPDATE_SOURCES));
                     wait((1000 * 60) * 15);
                 } catch (Exception e) {
                 }
             }
+        }
+    }
+
+    public void onEvent(SuggestionEvent event) {
+        switch (event.getType()) {
+
+            case UPDATE_SOURCES:
+                suggestionManager.updateSuggestionSources();
+                break;
+
+            case UPDATE_SUGGESTIONS:
+                suggestionManager.updateSuggestions();
+                break;
         }
     }
 }

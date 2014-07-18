@@ -17,6 +17,7 @@ public class SuggestionBatch {
     private ArrayList<CalendarSuggestion> suggestions;
 
     public SuggestionBatch(String sourceContainerName,
+                           String sourceContainerType,
                            String sourceContainerId,
                            String sourceIdInsideContainer,
                            String sourceName,
@@ -25,7 +26,7 @@ public class SuggestionBatch {
                            long timespanEndEpoch,
                            ArrayList<CalendarSuggestion> suggestions) {
         this.sourceContainerName = sourceContainerName;
-        this.sourceContainerType = "phone";
+        this.sourceContainerType = sourceContainerType;
         this.sourceContainerId = sourceContainerId;
         this.sourceIdInsideContainer = sourceIdInsideContainer;
         this.sourceName = sourceName;
