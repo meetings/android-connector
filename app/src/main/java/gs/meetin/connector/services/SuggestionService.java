@@ -23,12 +23,12 @@ import retrofit.http.Body;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
-public class Suggestion {
+public class SuggestionService {
 
     private String userId;
-    private SuggestionService suggestionService;
+    private SuggestionRouter suggestionService;
 
-    public interface SuggestionService {
+    public interface SuggestionRouter {
         @POST("/users/{userId}/suggestion_sources/set_container_batch")
         void updateSources(@Path("userId") String userId, @Body SourceContainer body, Callback<SourceContainer> cb);
 
@@ -37,28 +37,8 @@ public class Suggestion {
 
     }
 
-    public Suggestion(final String userId, final String token) {
-
-        this.userId = userId;
-
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
-
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader("user_id", userId);
-                        request.addHeader("dic", token);
-                    }
-                })
-                .setConverter(new GsonConverter(gson))
-                .setEndpoint(Constants.apiBaseURL)
-                .build();
-
-        suggestionService = restAdapter.create(SuggestionService.class);
+    public SuggestionService(RestAdapter restAdapter) {
+        suggestionService = restAdapter.create(SuggestionRouter.class);
     }
 
     public void updateSources(SourceContainer sourceContainer) {
