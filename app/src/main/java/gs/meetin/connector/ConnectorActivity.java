@@ -1,5 +1,6 @@
 package gs.meetin.connector;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -15,7 +16,7 @@ import gs.meetin.connector.events.SuggestionEvent;
 import static gs.meetin.connector.events.Event.EventType.UPDATE_SOURCES;
 
 
-public class ConnectorActivity extends ActionBarActivity {
+public class ConnectorActivity extends Activity {
 
     private SessionManager sessionManager;
 

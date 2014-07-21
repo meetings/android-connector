@@ -25,11 +25,11 @@
 
         <activity
             android:name=".LoginEmailActivity"
-            android:label="@string/title_activity_login" >
+            android:theme="@android:style/Theme.Holo.NoActionBar">
         </activity>
         <activity
             android:name=".LoginPinActivity"
-            android:label="@string/title_activity_login_pin" >
+            android:theme="@android:style/Theme.Holo.NoActionBar">
         </activity>
     </application>
 

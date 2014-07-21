@@ -1,5 +1,6 @@
 package gs.meetin.connector;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +18,7 @@ import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.services.LoginService;
 import retrofit.RestAdapter;
 
-public class LoginEmailActivity extends ActionBarActivity {
+public class LoginEmailActivity extends Activity {
 
     public final static String EXTRA_EMAIL = "gs.meetin.connector.LOGIN_EMAIL";
 
