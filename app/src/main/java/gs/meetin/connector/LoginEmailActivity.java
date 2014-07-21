@@ -85,10 +85,7 @@ public class LoginEmailActivity extends Activity {
         sendEmail1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setEnabled(false);
-                (findViewById(R.id.loginEmailProgress)).setVisibility(View.VISIBLE);
-
-                loginService.requestPin("tuomas.lahti+001+demo@meetin.gs");
+                ((EditText) findViewById(R.id.inputEmail)).setText("tuomas.lahti+001+demo@meetin.gs");
             }
         });
     }

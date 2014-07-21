@@ -90,7 +90,7 @@ public class LoginPinActivity extends Activity {
     private void showAlert(String title, String message) {
 
         (findViewById(R.id.buttonSignInPin)).setEnabled(true);
-        (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
+        (findViewById(R.id.loginPinProgress)).setVisibility(View.INVISIBLE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
