@@ -83,10 +83,6 @@ public class CalendarManager {
             String displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
             boolean isPrimary = cur.getString(PROJECTION_IS_PRIMARY_INDEX).equals("1");
 
-            Log.d("Mtn.gs", "CalId:" + calId);
-            Log.d("Mtn.gs", "displayname:" + displayName);
-            Log.d("Mtn.gs", "is primary:" + isPrimary);
-
             SuggestionSource source = new SuggestionSource(displayName, displayName, isPrimary);
 
             sources.add(source);
@@ -139,15 +135,6 @@ public class CalendarManager {
                 attendees = attendeeListToString(attendeeList);
             }
 
-            Log.d("Mtn.gs", "------- Found event");
-            Log.d("Mtn.gs", "evtId:" + evtId);
-            Log.d("Mtn.gs", "title:" + title);
-            Log.d("Mtn.gs", "start:" + startDate);
-            Log.d("Mtn.gs", "end:" + endDate);
-            Log.d("Mtn.gs", "organizer:" + organizer);
-            Log.d("Mtn.gs", "attendees:" + attendees);
-
-
             CalendarSuggestion suggestion = new CalendarSuggestion(evtId,
                                                                    title,
                                                                    startDate / 1000,
@@ -184,10 +171,6 @@ public class CalendarManager {
             long attId = cur.getLong(PROJECTION_ID_INDEX);
             String attendeeName = cur.getString(PROJECTION_ATTENDEE_NAME_INDEX);
             String attendeeEmail = cur.getString(PROJECTION_ATTENDEE_EMAIL_INDEX);
-
-            Log.d("Mtn.gs", "attId:" + attId);
-            Log.d("Mtn.gs", "attendee:" + attendeeName);
-            Log.d("Mtn.gs", "email:" + attendeeEmail);
 
             Attendee attendee = new Attendee(attendeeName, attendeeEmail);
 

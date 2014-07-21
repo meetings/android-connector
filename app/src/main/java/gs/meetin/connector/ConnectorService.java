@@ -26,13 +26,6 @@ public class ConnectorService extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("Mtn.gs", "Starting service...");
-        running = true;
-
-        sessionManager = new SessionManager(this);
-
-        suggestionManager = new SuggestionManager(this, sessionManager);
-
-        EventBus.getDefault().register(this);
 
         return super.onStartCommand(intent,flags,startId);
     }
@@ -40,6 +33,13 @@ public class ConnectorService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        running = true;
+
+        sessionManager = new SessionManager(this);
+
+        suggestionManager = new SuggestionManager(this, sessionManager);
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
