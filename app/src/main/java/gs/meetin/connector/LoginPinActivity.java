@@ -73,6 +73,9 @@ public class LoginPinActivity extends ActionBarActivity {
         sendPin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.setEnabled(false);
+                (findViewById(R.id.loginPinProgress)).setVisibility(View.VISIBLE);
+
                 signIn();
             }
         });
@@ -85,6 +88,10 @@ public class LoginPinActivity extends ActionBarActivity {
     }
 
     private void showAlert(String title, String message) {
+
+        (findViewById(R.id.buttonSignInPin)).setEnabled(true);
+        (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setMessage(message)

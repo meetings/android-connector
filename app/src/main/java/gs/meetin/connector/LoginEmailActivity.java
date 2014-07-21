@@ -47,6 +47,10 @@ public class LoginEmailActivity extends ActionBarActivity {
         switch (event.getType()) {
 
             case PIN_REQUEST_SUCCESSFUL:
+
+                (findViewById(R.id.buttonSignInEmail)).setEnabled(true);
+                (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
+
                 Intent loginIntent = new Intent(this, LoginPinActivity.class);
                 loginIntent.putExtra(EXTRA_EMAIL, email);
                 startActivity(loginIntent);
@@ -69,7 +73,21 @@ public class LoginEmailActivity extends ActionBarActivity {
         sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.setEnabled(false);
+                (findViewById(R.id.loginEmailProgress)).setVisibility(View.VISIBLE);
+
                 showPinRequest();
+            }
+        });
+        Button sendEmail1 = (Button) findViewById(R.id.buttonSignInEmailQuick1);
+
+        sendEmail1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setEnabled(false);
+                (findViewById(R.id.loginEmailProgress)).setVisibility(View.VISIBLE);
+
+                loginService.requestPin("tuomas.lahti+001+demo@meetin.gs");
             }
         });
     }
@@ -90,6 +108,10 @@ public class LoginEmailActivity extends ActionBarActivity {
     }
 
     private void showAlert(String title, String message) {
+
+        (findViewById(R.id.buttonSignInEmail)).setEnabled(true);
+        (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setMessage(message)

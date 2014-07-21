@@ -51,6 +51,7 @@ public class LoginService {
             @Override
             public void failure(RetrofitError error) {
                 Log.e("Mtn.gs", error.getMessage());
+                EventBus.getDefault().post(new ErrorEvent("Sorry!", error.getMessage()));
             }
         });
     }
@@ -73,6 +74,7 @@ public class LoginService {
             @Override
             public void failure(RetrofitError error) {
                 Log.e("Mtn.gs", error.getMessage());
+                EventBus.getDefault().post(new ErrorEvent("Sorry!", error.getMessage()));
             }
         });
     }
