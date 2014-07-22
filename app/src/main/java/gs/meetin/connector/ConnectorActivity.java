@@ -28,14 +28,19 @@ public class ConnectorActivity extends Activity {
         EventBus.getDefault().register(this);
 
         sessionManager = new SessionManager(this);
-        sessionManager.checkLogin();
+        if(!sessionManager.isLoggedIn()) {
 
-        setButtonListeners();
+            sessionManager.signOut();
 
-        TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
-        userEmail.setText(sessionManager.getUserEmail());
+        } else {
 
-        startCalendarService();
+            setButtonListeners();
+
+            TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
+            userEmail.setText(sessionManager.getUserEmail());
+
+            startCalendarService();
+        }
     }
 
     @Override

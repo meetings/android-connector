@@ -57,18 +57,6 @@ public class SessionManager {
         startLoginActivity();
     }
 
-    /**
-     * Check login method wil check user login status
-     * If false it will redirect user to login page
-     * Else won't do anything
-     * */
-    public void checkLogin(){
-        // Check login status
-        if(!this.isLoggedIn()){
-            signOut();
-        }
-    }
-
     public boolean isLoggedIn(){
         return pref.getBoolean(IS_LOGIN, false);
     }
