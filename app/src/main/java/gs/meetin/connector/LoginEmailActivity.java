@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Patterns;
@@ -16,6 +17,7 @@ import gs.meetin.connector.adapters.LoginAdapter;
 import gs.meetin.connector.events.ErrorEvent;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.services.LoginService;
+import gs.meetin.connector.utils.Dialogs;
 import retrofit.RestAdapter;
 
 public class LoginEmailActivity extends Activity {
@@ -65,7 +67,26 @@ public class LoginEmailActivity extends Activity {
     }
 
     public void onEvent(ErrorEvent event) {
-        showAlert(event.getTitle(), event.getMessage());
+
+        (findViewById(R.id.buttonSignInEmail)).setEnabled(true);
+        (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
+
+        if(event.getErrorCode() == 1) {
+            Dialogs.simpleAlert(this, event.getTitle(), event.getMessage()).show();
+        } else {
+            Dialogs.twoButtonDialog(this, R.string.unknown_email_title, R.string.unknown_email_message, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mobile.meetin.gs"));
+                    startActivity(browserIntent);
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            }).show();
+        }
     }
 
     private void setButtonListeners() {
@@ -97,31 +118,11 @@ public class LoginEmailActivity extends Activity {
             loginService.requestPin(email);
 
         } else {
-            showAlert(getString(R.string.invalid_email_title), getString(R.string.invalid_email_message));
+            Dialogs.simpleAlert(this, getString(R.string.invalid_email_title), getString(R.string.invalid_email_message)).show();
         }
     }
 
     private boolean isValidEmail(CharSequence email) {
         return email != null && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private void showAlert(String title, String message) {
-
-        (findViewById(R.id.buttonSignInEmail)).setEnabled(true);
-        (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage(message)
-                .setTitle(title)
-                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }

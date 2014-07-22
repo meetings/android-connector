@@ -41,7 +41,8 @@ public class LoginService {
             @Override
             public void success(PinRequest result, Response response) {
                 if(result.error != null) {
-                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.error.message));
+                    int errorCode = Integer.parseInt(result.error.code);
+                    EventBus.getDefault().post(new ErrorEvent(errorCode, "Sorry!", result.error.message));
                     return;
                 }
 

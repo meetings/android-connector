@@ -15,6 +15,7 @@ import gs.meetin.connector.adapters.LoginAdapter;
 import gs.meetin.connector.events.ErrorEvent;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.services.LoginService;
+import gs.meetin.connector.utils.Dialogs;
 import retrofit.RestAdapter;
 
 public class LoginPinActivity extends Activity {
@@ -64,7 +65,11 @@ public class LoginPinActivity extends Activity {
     }
 
     public void onEvent(ErrorEvent event) {
-        showAlert(event.getTitle(), event.getMessage());
+
+        (findViewById(R.id.buttonSignInPin)).setEnabled(true);
+        (findViewById(R.id.loginPinProgress)).setVisibility(View.INVISIBLE);
+
+        Dialogs.simpleAlert(this, event.getTitle(), event.getMessage()).show();
     }
 
     private void setButtonListeners() {
@@ -85,25 +90,5 @@ public class LoginPinActivity extends Activity {
         String pin = ((EditText) findViewById(R.id.inputPin)).getText().toString();
 
         loginService.login(email, pin);
-    }
-
-    private void showAlert(String title, String message) {
-
-        (findViewById(R.id.buttonSignInPin)).setEnabled(true);
-        (findViewById(R.id.loginPinProgress)).setVisibility(View.INVISIBLE);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage(message)
-                .setTitle(title)
-                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }
