@@ -1,11 +1,8 @@
 package gs.meetin.connector;
 
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import de.greenrobot.event.EventBus;
 import gs.meetin.connector.events.SuggestionEvent;
@@ -57,7 +54,7 @@ public class ConnectorService extends IntentService {
                 try {
                     Log.d("Mtn.gs", "Syncing suggestions... ");
                     EventBus.getDefault().post(new SuggestionEvent(UPDATE_SOURCES));
-                    wait((1000 * 60) * 15);
+                    wait(Constants.updateInterval);
                 } catch (Exception e) {
                 }
             }
