@@ -10,7 +10,7 @@ public class SuggestionBatch {
     private String sourceContainerName;
     private String sourceIdInsideContainer;
     private String sourceName;
-    private boolean sourceIsPrimary;
+    private short sourceIsPrimary;
     private long timespanBeginEpoch;
     private long timespanEndEpoch;
 
@@ -21,7 +21,7 @@ public class SuggestionBatch {
                            String sourceContainerId,
                            String sourceIdInsideContainer,
                            String sourceName,
-                           boolean sourceIsPrimary,
+                           short sourceIsPrimary,
                            long timespanBeginEpoch,
                            long timespanEndEpoch,
                            ArrayList<CalendarSuggestion> suggestions) {

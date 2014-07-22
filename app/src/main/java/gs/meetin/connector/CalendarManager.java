@@ -81,7 +81,7 @@ public class CalendarManager {
         while (cur.moveToNext()) {
             long calId = cur.getLong(PROJECTION_ID_INDEX);
             String displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
-            boolean isPrimary = cur.getString(PROJECTION_IS_PRIMARY_INDEX).equals("1");
+            short isPrimary = cur.getShort(PROJECTION_IS_PRIMARY_INDEX);
 
             SuggestionSource source = new SuggestionSource(displayName, displayName, isPrimary);
 

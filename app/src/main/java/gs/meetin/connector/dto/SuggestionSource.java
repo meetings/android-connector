@@ -2,14 +2,20 @@ package gs.meetin.connector.dto;
 
 public class SuggestionSource {
 
+    private String containerName;
     private String name;
     private String idInsideContainer;
-    private boolean isPrimary;
+    private short isPrimary;
+    private long lastUpdateEpoch;
 
-    public SuggestionSource(String name, String idInsideContainer, boolean isPrimary) {
+    public SuggestionSource(String name, String idInsideContainer, short isPrimary) {
         this.name = name;
         this.idInsideContainer = idInsideContainer;
         this.isPrimary = isPrimary;
+    }
+
+    public String getContainerName() {
+        return containerName;
     }
 
     public String getName() {
@@ -20,7 +26,11 @@ public class SuggestionSource {
         return idInsideContainer;
     }
 
-    public boolean getIsPrimary() {
+    public short getIsPrimary() {
         return isPrimary;
+    }
+
+    public long getLastUpdateEpoch() {
+        return lastUpdateEpoch;
     }
 }

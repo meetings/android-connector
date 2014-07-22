@@ -9,6 +9,7 @@ public abstract class Event {
         LOGIN_SUCCESSFUL,
 
         // Suggestion
+        GET_SOURCES_SUCCESSFUL,
         UPDATE_SOURCES,
         UPDATE_SUGGESTIONS
     }
