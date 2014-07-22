@@ -7,12 +7,12 @@ public class PinRequest {
 
     // Request
     private String email;
-    private String include_pin;
-    private String allow_register;
+    private String includePin;
+    private String allowRegister;
 
     public PinRequest(String email) {
         this.email = email;
-        this.include_pin = "1";
-        this.allow_register = "1";
+        this.includePin = "1";
+        this.allowRegister = "0";
     }
 }
