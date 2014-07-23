@@ -71,9 +71,7 @@ public class LoginEmailActivity extends Activity {
         (findViewById(R.id.buttonSignInEmail)).setEnabled(true);
         (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
 
-        if(event.getErrorCode() == 1) {
-            Dialogs.simpleAlert(this, event.getTitle(), event.getMessage()).show();
-        } else {
+        if(event.getErrorCode() == 2) {
             Dialogs.twoButtonDialog(this, R.string.unknown_email_title, R.string.unknown_email_message, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -86,6 +84,8 @@ public class LoginEmailActivity extends Activity {
                     dialogInterface.dismiss();
                 }
             }).show();
+        } else {
+            Dialogs.simpleAlert(this, event.getTitle(), event.getMessage()).show();
         }
     }
 
@@ -118,7 +118,7 @@ public class LoginEmailActivity extends Activity {
             loginService.requestPin(email);
 
         } else {
-            Dialogs.simpleAlert(this, getString(R.string.invalid_email_title), getString(R.string.invalid_email_message)).show();
+            EventBus.getDefault().post(new ErrorEvent(getString(R.string.invalid_email_title), getString(R.string.invalid_email_message)));
         }
     }
 

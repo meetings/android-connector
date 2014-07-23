@@ -37,20 +37,18 @@
             android:hint="example@meetin.gs" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/signIn"
             android:id="@+id/buttonSignInEmail"
             android:layout_below="@+id/inputEmail"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            style="@style/primary_button" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign in as tuomas.lahti+001+demo@meetin.gs"
+            android:text="tuomas.lahti+001+demo@meetin.gs"
             android:id="@+id/buttonSignInEmailQuick1"
             android:layout_below="@+id/buttonSignInEmail"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            style="@style/secondary_button" />
 
     </RelativeLayout>
 </RelativeLayout>

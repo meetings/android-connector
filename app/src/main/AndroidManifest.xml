@@ -24,12 +24,10 @@
         </service>
 
         <activity
-            android:name=".LoginEmailActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar">
+            android:name=".LoginEmailActivity">
         </activity>
         <activity
-            android:name=".LoginPinActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar">
+            android:name=".LoginPinActivity">
         </activity>
     </application>
 
