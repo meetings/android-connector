@@ -75,7 +75,16 @@ public class ConnectorActivity extends Activity {
     public void onEvent(SuggestionEvent event) {
         switch (event.getType()) {
 
+            case UPDATE_SOURCES:
+                (findViewById(R.id.buttonSyncNow)).setEnabled(false);
+                (findViewById(R.id.connectorProgress)).setVisibility(View.VISIBLE);
+
+                break;
+
             case GET_SOURCES_SUCCESSFUL:
+                (findViewById(R.id.buttonSyncNow)).setEnabled(true);
+                (findViewById(R.id.connectorProgress)).setVisibility(View.INVISIBLE);
+
                 refreshLastUpdateTime(event.getSuggestionSources());
                 break;
         }

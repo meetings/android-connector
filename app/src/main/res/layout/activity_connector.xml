@@ -2,55 +2,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".ConnectorActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/loggedInAs"
-        android:id="@+id/textLoggedIn"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/textUserEmail"
-        android:layout_below="@+id/textLoggedIn"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/lastSync"
-        android:id="@+id/lastSync"
-        android:layout_below="@+id/textUserEmail"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/lastSyncDate"
-        android:layout_below="@+id/lastSync"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="@string/syncNow"
-        android:id="@+id/buttonSyncNow"
-        android:layout_below="@+id/lastSyncDate"
+        android:id="@+id/connectorProgress"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        style="@style/primary_button"/>
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="-6dp" />
 
-    <Button
-        android:text="@string/signOut"
-        android:id="@+id/buttonLogout"
-        android:layout_below="@+id/buttonSyncNow"
-        android:layout_centerHorizontal="true"
-        style="@style/secondary_button"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/innerConnectorLayout"
+        android:layout_centerHorizontal="true">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="LOGO PLACEHOLDER"
+            android:id="@+id/logoPlaceholder"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"/>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastSyncLayout"
+            android:layout_below="@+id/logoPlaceholder" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lastSync"
+                android:id="@+id/lastSync"
+                android:paddingRight="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/lastSyncDate"
+                android:layout_toRightOf="@+id/lastSync" />
+
+        </RelativeLayout>
+
+        <Button
+            android:text="@string/syncNow"
+            android:id="@+id/buttonSyncNow"
+            android:layout_below="@+id/lastSyncLayout"
+            android:layout_centerHorizontal="true"
+            style="@style/primary_button"/>
+
+        <Button
+            android:text="@string/signOut"
+            android:id="@+id/buttonLogout"
+            android:layout_below="@+id/buttonSyncNow"
+            android:layout_centerHorizontal="true"
+            style="@style/secondary_button"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loggedInAs"
+            android:id="@+id/textLoggedIn"
+            android:paddingRight="4dp"
+            android:layout_below="@+id/buttonLogout" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/textUserEmail"
+            android:layout_below="@+id/buttonLogout"
+            android:layout_toRightOf="@+id/textLoggedIn" />
+
+    </RelativeLayout>
 </RelativeLayout>
