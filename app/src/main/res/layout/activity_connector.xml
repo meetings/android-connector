@@ -40,19 +40,17 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/syncNow"
         android:id="@+id/buttonSyncNow"
         android:layout_below="@+id/lastSyncDate"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        style="@style/primary_button"/>
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="@string/signOut"
         android:id="@+id/buttonLogout"
         android:layout_below="@+id/buttonSyncNow"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        style="@style/secondary_button"/>
 
 </RelativeLayout>
