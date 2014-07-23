@@ -105,6 +105,8 @@ public class ConnectorActivity extends Activity {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                new SuggestionManager(getApplicationContext(), sessionManager).removeSuggestionSources();
+
                 stopCalendarService();
                 sessionManager.signOut();
             }

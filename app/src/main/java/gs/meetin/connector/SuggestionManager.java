@@ -48,6 +48,15 @@ public class SuggestionManager {
         suggestionService.updateSources(sourceContainer);
     }
 
+    public void removeSuggestionSources() {
+        String containerName = Device.getDeviceName();
+        String androidId = Device.getAndroidId(context.getContentResolver());
+
+        SourceContainer sourceContainer = new SourceContainer(containerName, "phone", androidId, new ArrayList<SuggestionSource>() );
+
+        suggestionService.updateSources(sourceContainer);
+    }
+
     public void updateSuggestions() {
 
         DateTime todayDateTime = DateHelper.today();

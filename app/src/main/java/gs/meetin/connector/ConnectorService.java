@@ -43,6 +43,7 @@ public class ConnectorService extends IntentService {
     public void onDestroy() {
         Log.d("Mtn.gs", "Stopping service...");
         running = false;
+        suggestionManager = null;
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }

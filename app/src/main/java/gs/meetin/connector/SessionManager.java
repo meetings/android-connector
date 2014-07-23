@@ -81,6 +81,7 @@ public class SessionManager {
         editor.remove(KEY_USER_ID);
         editor.remove(KEY_TOKEN);
         editor.remove(KEY_EMAIL);
+        editor.remove(KEY_LAST_SYNC);
 
         editor.commit();
     }
