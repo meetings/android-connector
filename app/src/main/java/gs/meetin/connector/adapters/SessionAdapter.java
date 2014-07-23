@@ -31,6 +31,7 @@ public class SessionAdapter {
                     public void intercept(RequestFacade request) {
                         request.addHeader("user_id", userId);
                         request.addHeader("dic", token);
+                        request.addHeader("User-Agent", System.getProperty( "http.agent" ));
                     }
                 })
                 .setConverter(new GsonConverter(gson))
