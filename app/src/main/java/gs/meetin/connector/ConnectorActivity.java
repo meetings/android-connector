@@ -8,9 +8,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
+import java.util.Iterator;
+import java.util.List;
+
 import de.greenrobot.event.EventBus;
+import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.events.SuggestionEvent;
+import gs.meetin.connector.utils.Device;
 
 import static gs.meetin.connector.events.Event.EventType.UPDATE_SOURCES;
 
@@ -38,6 +45,15 @@ public class ConnectorActivity extends Activity {
             TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
             userEmail.setText(sessionManager.getUserEmail());
 
+
+            long lastSync = sessionManager.getLastSync();
+            TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
+            if(lastSync != 0) {
+                lastSyncDate.setText(new DateTime(sessionManager.getLastSync() * 1000).toString("HH:mm:ss dd.MM.YYYY"));
+            } else {
+                lastSyncDate.setText("-");
+            }
+
             startCalendarService();
         }
     }
@@ -54,6 +70,32 @@ public class ConnectorActivity extends Activity {
                 finish();
                 break;
         }
+    }
+
+    public void onEvent(SuggestionEvent event) {
+        switch (event.getType()) {
+
+            case GET_SOURCES_SUCCESSFUL:
+                refreshLastUpdateTime(event.getSuggestionSources());
+                break;
+        }
+    }
+
+    private void refreshLastUpdateTime(List<SuggestionSource> suggestionSources) {
+
+        long lastSync = 0;
+        for(Iterator<SuggestionSource> i = suggestionSources.iterator(); i.hasNext(); ) {
+            SuggestionSource source = i.next();
+            if(source.getContainerName().equals(Device.getDeviceName())) {
+                if(source.getLastUpdateEpoch() > lastSync) {
+                    lastSync = source.getLastUpdateEpoch();
+                }
+            }
+        }
+
+        sessionManager.setLastSync(lastSync);
+        TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
+        lastSyncDate.setText(new DateTime(lastSync * 1000).toString("HH:mm:ss dd.MM.YYYY"));
     }
 
     private void setButtonListeners() {

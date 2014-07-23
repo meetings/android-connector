@@ -34,6 +34,8 @@ public class SessionManager {
 
     public static final String KEY_EMAIL = "email";
 
+    public static final String KEY_LAST_SYNC = "lastsync";
+
     public SessionManager(Context context){
         this.context = context;
         pref = this.context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
@@ -103,5 +105,16 @@ public class SessionManager {
     }
     public String getUserEmail(){
         return pref.getString(KEY_EMAIL, null);
+    }
+    public long getLastSync () {
+        return pref.getLong(KEY_LAST_SYNC, 0);
+    }
+
+    public void setLastSync(long lastSync) {
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putLong(KEY_LAST_SYNC, lastSync);
+
+        editor.commit();
     }
 }

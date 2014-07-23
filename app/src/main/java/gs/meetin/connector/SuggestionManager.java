@@ -73,6 +73,8 @@ public class SuggestionManager {
                 suggestionService.updateSuggestions(batch);
             }
         }
+
+        suggestionService.getSources();
     }
 
     // Compare in memory cache of meetings to the ones found in calendar
