@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:id="@+id/inputEmail"
+            android:imeOptions="actionSend"
             android:layout_below="@+id/inputEmailText"
             android:layout_centerHorizontal="true"
             android:hint="example@meetin.gs"

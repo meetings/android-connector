@@ -1,16 +1,17 @@
 package gs.meetin.connector;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import de.greenrobot.event.EventBus;
 import gs.meetin.connector.adapters.LoginAdapter;
@@ -37,6 +38,7 @@ public class LoginEmailActivity extends Activity {
         RestAdapter loginAdapter = LoginAdapter.build();
         loginService = new LoginService(loginAdapter);
 
+        setActionListeners();
         setButtonListeners();
     }
 
@@ -97,18 +99,30 @@ public class LoginEmailActivity extends Activity {
         }
     }
 
+    private void setActionListeners() {
+        EditText inputEmail = (EditText) findViewById(R.id.inputEmail);
+
+        inputEmail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEND) {
+                    sendPinRequest();
+                }
+                return true;
+            }
+        });
+    }
+
     private void setButtonListeners() {
         Button sendEmail = (Button) findViewById(R.id.buttonSignInEmail);
 
         sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setEnabled(false);
-                (findViewById(R.id.loginEmailProgress)).setVisibility(View.VISIBLE);
-
-                showPinRequest();
+                sendPinRequest();
             }
         });
+
         Button sendEmail1 = (Button) findViewById(R.id.buttonSignInEmailQuick1);
 
         sendEmail1.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +133,10 @@ public class LoginEmailActivity extends Activity {
         });
     }
 
-    private void showPinRequest() {
+    private void sendPinRequest() {
+        (findViewById(R.id.buttonSignInEmail)).setEnabled(false);
+        (findViewById(R.id.loginEmailProgress)).setVisibility(View.VISIBLE);
+
         email = ((EditText) findViewById(R.id.inputEmail)).getText().toString();
 
         if (isValidEmail(email)) {
