@@ -26,43 +26,37 @@
         android:id="@+id/innerConnectorLayout"
         android:layout_centerHorizontal="true">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logoMain"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo2"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="LOGO PLACEHOLDER"
-            android:id="@+id/logoPlaceholder"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"/>
+            android:text="@string/lastSync"
+            android:id="@+id/lastSync"
+            android:layout_below="@+id/logoMain"
+            android:paddingRight="4dp" />
 
-        <RelativeLayout
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/lastSyncLayout"
-            android:layout_below="@+id/logoPlaceholder" >
+            android:text="-"
+            android:id="@+id/lastSyncDate"
+            android:layout_below="@+id/logoMain"
+            android:layout_toRightOf="@+id/lastSync" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lastSync"
-                android:id="@+id/lastSync"
-                android:paddingRight="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:id="@+id/lastSyncDate"
-                android:layout_toRightOf="@+id/lastSync" />
-
-        </RelativeLayout>
 
         <Button
             android:text="@string/syncNow"
             android:id="@+id/buttonSyncNow"
-            android:layout_below="@+id/lastSyncLayout"
+            android:layout_below="@+id/lastSync"
             android:layout_centerHorizontal="true"
             style="@style/primary_button"/>
 
@@ -84,10 +78,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="-"
             android:id="@+id/textUserEmail"
-            android:layout_below="@+id/buttonLogout"
-            android:layout_toRightOf="@+id/textLoggedIn" />
+            android:layout_below="@+id/textLoggedIn" />
 
     </RelativeLayout>
 </RelativeLayout>
