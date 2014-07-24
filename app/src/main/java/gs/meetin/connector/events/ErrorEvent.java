@@ -2,7 +2,7 @@ package gs.meetin.connector.events;
 
 public class ErrorEvent {
 
-    private int errorCode = -1;
+    private short errorCode = -1;
     private String title;
     private String message;
 
@@ -11,13 +11,13 @@ public class ErrorEvent {
         this.message = message;
     }
 
-    public ErrorEvent(int errorCode, String title, String message) {
+    public  ErrorEvent(short errorCode, String title, String message) {
         this.errorCode = errorCode;
         this.title = title;
         this.message = message;
     }
 
-    public int getErrorCode() {
+    public short getErrorCode() {
         return errorCode;
     }
 

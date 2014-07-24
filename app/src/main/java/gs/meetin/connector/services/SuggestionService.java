@@ -2,9 +2,14 @@ package gs.meetin.connector.services;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import gs.meetin.connector.dto.ApiError;
+import gs.meetin.connector.dto.MtnResponse;
 import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionBatch;
 import gs.meetin.connector.dto.SuggestionSource;
@@ -18,6 +23,9 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.mime.MimeUtil;
+import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedInput;
 
 import static gs.meetin.connector.events.Event.EventType.GET_SOURCES_SUCCESSFUL;
 import static gs.meetin.connector.events.Event.EventType.UPDATE_SUGGESTIONS;
@@ -44,7 +52,6 @@ public class SuggestionService {
         this.userId = userId;
     }
 
-    // TODO Error handling
     public void getSources() {
         suggestionService.getSources(userId, new Callback<List<SuggestionSource>>() {
             @Override
@@ -55,8 +62,26 @@ public class SuggestionService {
 
             @Override
             public void failure(RetrofitError error) {
+                // TODO Move error handling to custom error handler
                 Log.e("Mtn.gs", error.getMessage());
-                EventBus.getDefault().post(new ErrorEvent("Sorry!", error.getMessage()));
+
+                TypedInput body = error.getResponse().getBody();
+
+                byte[] bodyBytes = ((TypedByteArray) body).getBytes();
+
+                String bodyMime = body.mimeType();
+                String bodyCharset = MimeUtil.parseCharset(bodyMime);
+                try {
+                    String errorStr = new String(bodyBytes, bodyCharset);
+
+                    MtnResponse response = new Gson().fromJson(errorStr, MtnResponse.class);
+                    ApiError apiError = response.getError();
+
+                    EventBus.getDefault().post(new ErrorEvent(apiError.code, "Sorry!", apiError.message));
+
+                } catch (UnsupportedEncodingException e) {
+                    Log.e("Mtn.gs", e.getMessage());
+                }
             }
         });
     }
@@ -66,8 +91,8 @@ public class SuggestionService {
             @Override
             public void success(SourceContainer result, Response response) {
 
-                if(result.error != null) {
-                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.error.message));
+                if(result.getError() != null) {
+                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.getError().message));
                     return;
                 }
 
@@ -88,8 +113,8 @@ public class SuggestionService {
             @Override
             public void success(SuggestionBatch result, Response response) {
 
-                if(result.error != null) {
-                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.error.message));
+                if(result.getError() != null) {
+                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.getError().message));
                     return;
                 }
 

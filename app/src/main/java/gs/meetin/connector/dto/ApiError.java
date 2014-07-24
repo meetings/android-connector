@@ -2,6 +2,6 @@ package gs.meetin.connector.dto;
 
 
 public class ApiError {
-    public String code;
+    public short code;
     public String message;
 }

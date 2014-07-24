@@ -1,10 +1,9 @@
 package gs.meetin.connector.dto;
 
-public class LoginRequest {
+public class LoginRequest extends MtnResponse{
 
     // Repsonse
     public User result;
-    public ApiError error;
 
     // Request
     private String email;

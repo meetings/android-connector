@@ -2,9 +2,7 @@ package gs.meetin.connector.dto;
 
 import java.util.ArrayList;
 
-public class SourceContainer {
-
-    public ApiError error;
+public class SourceContainer extends MtnResponse{
 
     private String containerName;
     private String containerType;

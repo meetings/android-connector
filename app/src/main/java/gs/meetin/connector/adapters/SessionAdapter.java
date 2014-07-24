@@ -32,6 +32,7 @@ public class SessionAdapter {
                         request.addHeader("user_id", userId);
                         request.addHeader("dic", token);
                         request.addHeader("User-Agent", System.getProperty( "http.agent" ));
+                        request.addHeader("x-expect-http-errors-for-rest", "1");
                     }
                 })
                 .setConverter(new GsonConverter(gson))

@@ -40,9 +40,8 @@ public class LoginService {
         loginService.requestPin(new PinRequest(email), new Callback<PinRequest>() {
             @Override
             public void success(PinRequest result, Response response) {
-                if(result.error != null) {
-                    int errorCode = Integer.parseInt(result.error.code);
-                    EventBus.getDefault().post(new ErrorEvent(errorCode, "Sorry!", result.error.message));
+                if(result.getError() != null) {
+                    EventBus.getDefault().post(new ErrorEvent(result.getError().code, "Sorry!", result.getError().message));
                     return;
                 }
 
@@ -61,8 +60,8 @@ public class LoginService {
         loginService.login(new LoginRequest(email, pin), new Callback<LoginRequest>() {
             @Override
             public void success(LoginRequest result, Response response) {
-                if(result.error != null) {
-                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.error.message));
+                if(result.getError() != null) {
+                    EventBus.getDefault().post(new ErrorEvent("Sorry!", result.getError().message));
                     return;
                 }
 

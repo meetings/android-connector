@@ -1,9 +1,7 @@
 package gs.meetin.connector.dto;
 
 
-public class PinRequest {
-    // Response
-    public ApiError error;
+public class PinRequest extends MtnResponse {
 
     // Request
     private String email;

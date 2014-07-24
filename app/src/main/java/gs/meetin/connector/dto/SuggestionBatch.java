@@ -2,8 +2,7 @@ package gs.meetin.connector.dto;
 
 import java.util.ArrayList;
 
-public class SuggestionBatch {
-    public ApiError error;
+public class SuggestionBatch extends MtnResponse {
 
     private String sourceContainerId;
     private String sourceContainerType;
