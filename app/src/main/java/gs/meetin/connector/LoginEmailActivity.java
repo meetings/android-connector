@@ -72,18 +72,26 @@ public class LoginEmailActivity extends Activity {
         (findViewById(R.id.loginEmailProgress)).setVisibility(View.INVISIBLE);
 
         if(event.getErrorCode() == 2) {
-            Dialogs.twoButtonDialog(this, R.string.unknown_email_title, R.string.unknown_email_message, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mobile.meetin.gs"));
-                    startActivity(browserIntent);
-                }
-            }, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).show();
+            Dialogs.twoButtonDialog(
+                    this,
+                    R.string.unknown_email_title,
+                    R.string.unknown_email_message,
+                    R.string.yes,
+                    R.string.no,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://mobile.meetin.gs"));
+                            startActivity(browserIntent);
+                        }
+                    },
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }
+            ).show();
         } else {
             Dialogs.simpleAlert(this, event.getTitle(), event.getMessage()).show();
         }

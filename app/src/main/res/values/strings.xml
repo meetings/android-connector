@@ -24,7 +24,7 @@
     <string name="pin_request_error">Error!</string>
     <string name="invalid_email_title">Invalid email!</string>
     <string name="invalid_email_message">Please use a valid email address</string>
-    <string name="unknown_email_title">Unknown email addressa</string>
+    <string name="unknown_email_title">Unknown email address</string>
     <string name="unknown_email_message">We could not find an account with this email address. Would you like to create a new account?</string>
     <string name="disconnect_title">Disconnect?</string>
     <string name="disconnect_message">Disconnecting your device\'s calendar will remove imported information from Meetin.gs.</string>

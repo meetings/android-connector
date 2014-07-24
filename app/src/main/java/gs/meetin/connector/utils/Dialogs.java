@@ -24,13 +24,13 @@ public class Dialogs {
         return builder.create();
     }
 
-    public static AlertDialog twoButtonDialog(Context context, int titleId, int messageId, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction) {
+    public static AlertDialog twoButtonDialog(Context context, int titleId, int messageId, int positiveButtonTextId, int negativeButtonTextId, DialogInterface.OnClickListener positiveAction, DialogInterface.OnClickListener negativeAction) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setMessage(messageId)
                 .setTitle(titleId)
-                .setPositiveButton(R.string.yes, positiveAction)
-                .setNegativeButton(R.string.no, negativeAction);
+                .setPositiveButton(positiveButtonTextId, positiveAction)
+                .setNegativeButton(negativeButtonTextId, negativeAction);
 
         return builder.create();
     }

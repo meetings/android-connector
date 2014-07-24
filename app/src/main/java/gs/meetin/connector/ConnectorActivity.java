@@ -1,7 +1,10 @@
 package gs.meetin.connector;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +21,7 @@ import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.events.SuggestionEvent;
 import gs.meetin.connector.utils.Device;
+import gs.meetin.connector.utils.Dialogs;
 
 import static gs.meetin.connector.events.Event.EventType.UPDATE_SOURCES;
 
@@ -108,16 +112,35 @@ public class ConnectorActivity extends Activity {
     }
 
     private void setButtonListeners() {
+        final Context context = this;
         Button btnLogout = (Button) findViewById(R.id.buttonLogout);
         Button btnSyncNow = (Button) findViewById(R.id.buttonSyncNow);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SuggestionManager(getApplicationContext(), sessionManager).removeSuggestionSources();
 
-                stopCalendarService();
-                sessionManager.signOut();
+                Dialogs.twoButtonDialog(
+                        context,
+                        R.string.disconnect_title,
+                        R.string.disconnect_message,
+                        R.string.OK,
+                        R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                new SuggestionManager(context, sessionManager).removeSuggestionSources();
+
+                                stopCalendarService();
+                                sessionManager.signOut();
+                            }
+                        }, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }
+                ).show();
             }
         });
 
