@@ -20,6 +20,7 @@ import de.greenrobot.event.EventBus;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.events.SuggestionEvent;
+import gs.meetin.connector.utils.DateHelper;
 import gs.meetin.connector.utils.Device;
 import gs.meetin.connector.utils.Dialogs;
 
@@ -53,9 +54,9 @@ public class ConnectorActivity extends Activity {
             long lastSync = sessionManager.getLastSync();
             TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
             if(lastSync != 0) {
-                lastSyncDate.setText(new DateTime(sessionManager.getLastSync() * 1000).toString("HH:mm:ss dd.MM.YYYY"));
+                lastSyncDate.setText(DateHelper.EpochToDateTimeString(sessionManager.getLastSync(), "HH:mm:ss dd.MM.YYYY"));
             } else {
-                lastSyncDate.setText("-");
+                lastSyncDate.setText(R.string.never);
             }
 
             startCalendarService();
@@ -108,7 +109,7 @@ public class ConnectorActivity extends Activity {
 
         sessionManager.setLastSync(lastSync);
         TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
-        lastSyncDate.setText(new DateTime(lastSync * 1000).toString("HH:mm:ss dd.MM.YYYY"));
+        lastSyncDate.setText(DateHelper.EpochToDateTimeString(lastSync, "HH:mm:ss dd.MM.YYYY"));
     }
 
     private void setButtonListeners() {
