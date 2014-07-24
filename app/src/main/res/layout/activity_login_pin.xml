@@ -45,8 +45,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="numberPassword"
-            android:ems="10"
             android:id="@+id/inputPin"
+            android:imeOptions="actionSend"
             android:textColor="@color/white"
             android:layout_below="@+id/textUserEmail" />
 
