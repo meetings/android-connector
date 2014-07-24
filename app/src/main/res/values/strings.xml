@@ -15,10 +15,11 @@
     <!-- TextViews -->
     <string name="loggedInAs">This device is connected to your account:</string>
     <string name="lastSync">Last synchronized:</string>
+    <string name="never">Never</string>
     <string name="loginInfo">With this connector app you can synchronize your device\'s calendar with your Meetin.gs account and import your calendar events to Meetin.gs.</string>
     <string name="inputEmail">Enter your email address</string>
     <string name="createAccount">Not registered with Meetin.gs? Create an account here.</string>
-    <string name="pinSent">We\'ve sent you a pin code to this address:</string>
+    <string name="pinSent">We have just sent you a pin code to this address:</string>
 
     <!-- Alerts -->
     <string name="pin_request_error">Error!</string>

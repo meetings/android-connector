@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/meetings_blue"
+    android:background="@color/light_grey1"
     tools:context="gs.meetin.connector.LoginPinActivity">
 
     <ProgressBar
@@ -27,19 +27,30 @@
         android:id="@+id/innerLoginEmailLayout"
         android:layout_centerHorizontal="true">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/logoLogin"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo2"
+            android:layout_alignParentTop="true"
+            android:paddingTop="35dp"
+            android:paddingBottom="35dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pinSent"
             android:id="@+id/textPinSent"
-            android:textColor="@color/white"/>
+            android:layout_below="@+id/logoLogin"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:id="@+id/textUserEmail"
-            android:layout_below="@+id/textPinSent" />
+            android:layout_below="@+id/textPinSent"
+            android:paddingBottom="5dp" />
 
         <EditText
             android:layout_width="fill_parent"
@@ -47,15 +58,21 @@
             android:inputType="numberPassword"
             android:id="@+id/inputPin"
             android:imeOptions="actionSend"
-            android:textColor="@color/white"
-            android:layout_below="@+id/textUserEmail" />
+            android:layout_below="@+id/textUserEmail"
+            android:textColorHint="@color/white_darken"
+            android:background="@color/white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_marginBottom="10dp" />
 
         <Button
             android:text="@string/signIn"
             android:id="@+id/buttonSignInPin"
             android:layout_below="@+id/inputPin"
             android:layout_centerHorizontal="true"
-            style="@style/secondary_button"/>
+            style="@style/primary_button"/>
 
     </RelativeLayout>
 </RelativeLayout>
