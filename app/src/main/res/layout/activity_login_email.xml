@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/meetings_blue"
     tools:context="gs.meetin.connector.LoginEmailActivity">
 
     <ProgressBar
@@ -26,22 +27,48 @@
         android:id="@+id/innerLoginEmailLayout"
         android:layout_centerHorizontal="true">
 
-        <EditText
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/inputEmail"
-            android:layout_alignParentTop="true"
+            android:id="@+id/imageView"
             android:layout_centerHorizontal="true"
-            android:hint="example@meetin.gs" />
+            android:src="@drawable/logo"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:text="@string/loginInfo"
+            android:id="@+id/loginInfoText"
+            android:layout_below="@+id/imageView"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/inputEmail"
+            android:id="@+id/inputEmailText"
+            android:layout_below="@+id/loginInfoText"
+            android:textColor="@color/white"  />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:id="@+id/inputEmail"
+            android:layout_below="@+id/inputEmailText"
+            android:layout_centerHorizontal="true"
+            android:hint="example@meetin.gs"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white_darken"/>
 
         <Button
             android:text="@string/signIn"
             android:id="@+id/buttonSignInEmail"
             android:layout_below="@+id/inputEmail"
             android:layout_centerHorizontal="true"
-            style="@style/primary_button" />
+            style="@style/secondary_button" />
 
         <Button
             android:text="tuomas.lahti+001+demo@meetin.gs"

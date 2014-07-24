@@ -4,23 +4,29 @@
     <string name="app_name">Meetin.gs connector</string>
 
     <!-- Buttons -->
-    <string name="syncNow">Sync now</string>
+    <string name="syncNow">Synchronize now</string>
     <string name="signIn">Sign in</string>
-    <string name="signOut">Sign out</string>
+    <string name="signOut">Disconnect</string>
     <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
     <!-- TextViews -->
-    <string name="loggedInAs">Logged in as:</string>
+    <string name="loggedInAs">This device is connected to your account:</string>
+    <string name="lastSync">Last synchronized:</string>
+    <string name="loginInfo">With this connector app you can synchronize your device\'s calendar with your Meetin.gs account and import your calendar events to Meetin.gs.</string>
+    <string name="inputEmail">Enter your email address</string>
+    <string name="createAccount">Not registered with Meetin.gs? Create an account here.</string>
     <string name="pinSent">We\'ve sent you a pin code to this address:</string>
 
     <!-- Alerts -->
     <string name="pin_request_error">Error!</string>
     <string name="invalid_email_title">Invalid email!</string>
     <string name="invalid_email_message">Please use a valid email address</string>
-    <string name="unknown_email_title">Unknown email</string>
-    <string name="unknown_email_message">User doesn\'t exist. Would you like to register a new account in browser?</string>
-    <string name="lastSync">Last sync:</string>
+    <string name="unknown_email_title">Unknown email addressa</string>
+    <string name="unknown_email_message">We could not find an account with this email address. Would you like to create a new account?</string>
+    <string name="disconnect_title">Disconnect?</string>
+    <string name="disconnect_message">Disconnecting your device\'s calendar will remove imported information from Meetin.gs.</string>
 
 </resources>

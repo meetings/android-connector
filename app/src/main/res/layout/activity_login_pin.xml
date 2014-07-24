@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/meetings_blue"
     tools:context="gs.meetin.connector.LoginPinActivity">
 
     <ProgressBar
@@ -31,31 +32,30 @@
             android:layout_height="wrap_content"
             android:text="@string/pinSent"
             android:id="@+id/textPinSent"
-            android:layout_centerHorizontal="true" />
+            android:textColor="@color/white"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
             android:id="@+id/textUserEmail"
-            android:layout_below="@+id/textPinSent"
-            android:layout_centerHorizontal="true" />
+            android:layout_below="@+id/textPinSent" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="numberPassword"
             android:ems="10"
             android:id="@+id/inputPin"
-            android:layout_below="@+id/textUserEmail"
-            android:layout_centerHorizontal="true" />
+            android:textColor="@color/white"
+            android:layout_below="@+id/textUserEmail" />
 
         <Button
             android:text="@string/signIn"
             android:id="@+id/buttonSignInPin"
             android:layout_below="@+id/inputPin"
             android:layout_centerHorizontal="true"
-            style="@style/primary_button"/>
+            style="@style/secondary_button"/>
 
     </RelativeLayout>
 </RelativeLayout>
