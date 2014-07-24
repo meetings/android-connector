@@ -54,7 +54,7 @@ public class ConnectorActivity extends Activity {
             long lastSync = sessionManager.getLastSync();
             TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
             if(lastSync != 0) {
-                lastSyncDate.setText(DateHelper.EpochToDateTimeString(sessionManager.getLastSync(), "HH:mm:ss dd.MM.YYYY"));
+                lastSyncDate.setText(DateHelper.EpochToDateTimeString(sessionManager.getLastSync()));
             } else {
                 lastSyncDate.setText(R.string.never);
             }
@@ -109,7 +109,7 @@ public class ConnectorActivity extends Activity {
 
         sessionManager.setLastSync(lastSync);
         TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
-        lastSyncDate.setText(DateHelper.EpochToDateTimeString(lastSync, "HH:mm:ss dd.MM.YYYY"));
+        lastSyncDate.setText(DateHelper.EpochToDateTimeString(lastSync));
     }
 
     private void setButtonListeners() {
