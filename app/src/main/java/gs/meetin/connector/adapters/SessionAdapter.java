@@ -33,6 +33,7 @@ public class SessionAdapter {
                         request.addHeader("dic", token);
                         request.addHeader("User-Agent", System.getProperty( "http.agent" ));
                         request.addHeader("x-expect-http-errors-for-rest", "1");
+                        request.addHeader("x-meetings-version", "1.0.0-beta.1 Android Connector");
                     }
                 })
                 .setConverter(new GsonConverter(gson))
