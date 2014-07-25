@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -15,6 +16,8 @@ import gs.meetin.connector.dto.SuggestionBatch;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.ErrorEvent;
 import gs.meetin.connector.events.SuggestionEvent;
+import gs.meetin.connector.events.UIEvent;
+import gs.meetin.connector.utils.Device;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -27,8 +30,8 @@ import retrofit.mime.MimeUtil;
 import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedInput;
 
-import static gs.meetin.connector.events.Event.EventType.GET_SOURCES_SUCCESSFUL;
-import static gs.meetin.connector.events.Event.EventType.UPDATE_SUGGESTIONS;
+import static gs.meetin.connector.events.Event.EventType.SET_LAST_SYNC_TIME;
+import static gs.meetin.connector.events.Event.EventType.SET_BUTTONS_ENABLED;
 
 public class SuggestionService {
 
@@ -57,7 +60,18 @@ public class SuggestionService {
             @Override
             public void success(List<SuggestionSource> result, Response response) {
                 Log.d("Mtn.gs", "Fetched sources successfully");
-                EventBus.getDefault().post(new SuggestionEvent(GET_SOURCES_SUCCESSFUL, result));
+                EventBus.getDefault().post(new UIEvent(SET_BUTTONS_ENABLED));
+
+                long lastSync = 0;
+                for(Iterator<SuggestionSource> i = result.iterator(); i.hasNext(); ) {
+                    SuggestionSource source = i.next();
+                    if(source.getContainerName().equals(Device.getDeviceName())) {
+                        if(source.getLastUpdateEpoch() > lastSync) {
+                            lastSync = source.getLastUpdateEpoch();
+                        }
+                    }
+                }
+                EventBus.getDefault().post(new UIEvent(SET_LAST_SYNC_TIME, lastSync));
             }
 
             @Override
@@ -86,18 +100,19 @@ public class SuggestionService {
         });
     }
 
-    public void updateSources(SourceContainer sourceContainer) {
+    public void updateSources(SourceContainer sourceContainer, final Callback cb) {
         suggestionService.updateSources(userId, sourceContainer, new Callback<SourceContainer>() {
             @Override
             public void success(SourceContainer result, Response response) {
 
                 if(result.getError() != null) {
                     EventBus.getDefault().post(new ErrorEvent("Sorry!", result.getError().message));
-                    return;
                 }
 
                 Log.d("Mtn.gs", "Updated sources successfully");
-                EventBus.getDefault().post(new SuggestionEvent(UPDATE_SUGGESTIONS));
+
+                if (cb != null)
+                    cb.success(null, null);
             }
 
             @Override

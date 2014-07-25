@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.joda.time.DateTime;
 
 import java.util.Iterator;
 import java.util.List;
@@ -20,11 +17,13 @@ import de.greenrobot.event.EventBus;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.events.SuggestionEvent;
+import gs.meetin.connector.events.UIEvent;
 import gs.meetin.connector.utils.DateHelper;
 import gs.meetin.connector.utils.Device;
 import gs.meetin.connector.utils.Dialogs;
 
-import static gs.meetin.connector.events.Event.EventType.UPDATE_SOURCES;
+import static gs.meetin.connector.events.Event.EventType.SET_BUTTONS_DISABLED;
+import static gs.meetin.connector.events.Event.EventType.UPDATE_SUGGESTIONS;
 
 
 public class ConnectorActivity extends Activity {
@@ -77,50 +76,28 @@ public class ConnectorActivity extends Activity {
         }
     }
 
-    public void onEvent(SuggestionEvent event) {
+    public void onEventMainThread(UIEvent event) {
         switch (event.getType()) {
 
-            case UPDATE_SOURCES:
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        (findViewById(R.id.buttonSyncNow)).setEnabled(false);
-                        (findViewById(R.id.connectorProgress)).setVisibility(View.VISIBLE);
-                    }
-                });
+            case SET_BUTTONS_ENABLED:
+                (findViewById(R.id.buttonSyncNow)).setEnabled(true);
+                (findViewById(R.id.connectorProgress)).setVisibility(View.INVISIBLE);
 
                 break;
 
-            case GET_SOURCES_SUCCESSFUL:
+            case SET_BUTTONS_DISABLED:
+                (findViewById(R.id.buttonSyncNow)).setEnabled(false);
+                (findViewById(R.id.connectorProgress)).setVisibility(View.VISIBLE);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        (findViewById(R.id.buttonSyncNow)).setEnabled(true);
-                        (findViewById(R.id.connectorProgress)).setVisibility(View.INVISIBLE);
-                    }
-                });
+                break;
 
-                refreshLastUpdateTime(event.getSuggestionSources());
+            case SET_LAST_SYNC_TIME:
+                sessionManager.setLastSync(event.getLastSync());
+                TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
+                lastSyncDate.setText(DateHelper.EpochToDateTimeString(event.getLastSync()));
+
                 break;
         }
-    }
-
-    private void refreshLastUpdateTime(List<SuggestionSource> suggestionSources) {
-
-        long lastSync = 0;
-        for(Iterator<SuggestionSource> i = suggestionSources.iterator(); i.hasNext(); ) {
-            SuggestionSource source = i.next();
-            if(source.getContainerName().equals(Device.getDeviceName())) {
-                if(source.getLastUpdateEpoch() > lastSync) {
-                    lastSync = source.getLastUpdateEpoch();
-                }
-            }
-        }
-
-        sessionManager.setLastSync(lastSync);
-        TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
-        lastSyncDate.setText(DateHelper.EpochToDateTimeString(lastSync));
     }
 
     private void setButtonListeners() {
@@ -159,7 +136,8 @@ public class ConnectorActivity extends Activity {
         btnSyncNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new SuggestionEvent(UPDATE_SOURCES));
+                EventBus.getDefault().post(new UIEvent(SET_BUTTONS_DISABLED));
+                EventBus.getDefault().post(new SuggestionEvent(UPDATE_SUGGESTIONS));
             }
         });
     }

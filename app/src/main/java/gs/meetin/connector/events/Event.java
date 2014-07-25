@@ -9,9 +9,12 @@ public abstract class Event {
         LOGIN_SUCCESSFUL,
 
         // Suggestion
-        GET_SOURCES_SUCCESSFUL,
-        UPDATE_SOURCES,
-        UPDATE_SUGGESTIONS
+        SET_LAST_SYNC_TIME,
+        UPDATE_SUGGESTIONS,
+
+        // UI
+        SET_BUTTONS_ENABLED,
+        SET_BUTTONS_DISABLED
     }
 
     private EventType type;
