@@ -56,7 +56,11 @@ public class ConnectorService extends IntentService {
             synchronized (this) {
                 try {
                     Log.d("Mtn.gs", "Syncing suggestions... ");
-                    EventBus.getDefault().post(new SuggestionEvent(UPDATE_SUGGESTIONS));
+
+                    SuggestionEvent suggestionEvent = new SuggestionEvent(UPDATE_SUGGESTIONS);
+                    suggestionEvent.putBoolean("forceUpdate", false);
+                    EventBus.getDefault().post(suggestionEvent);
+
                     wait(Constants.updateInterval);
                 } catch (Exception e) {
                 }
@@ -68,7 +72,7 @@ public class ConnectorService extends IntentService {
         switch (event.getType()) {
 
             case UPDATE_SUGGESTIONS:
-                if(!suggestionManager.update()) {
+                if(!suggestionManager.update(event.getBoolean("forceUpdate"))) {
                     EventBus.getDefault().post(new UIEvent(SET_BUTTONS_ENABLED));
                 }
                 break;

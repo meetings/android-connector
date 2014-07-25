@@ -47,12 +47,12 @@ public class SuggestionManager {
         androidId = Device.getAndroidId(context.getContentResolver());
     }
 
-     public boolean update() {
+     public boolean update(boolean forceUpdate) {
         ArrayList<SuggestionSource> suggestionSources = new CalendarManager().getCalendars(context);
 
-        final ArrayList<SuggestionBatch> updateList = getSuggestions(suggestionSources);
+        final ArrayList<SuggestionBatch> updateList = getSuggestions(suggestionSources, forceUpdate);
 
-        if(previousSuggestions.size() < suggestionSources.size() || !updateList.isEmpty()) {
+        if(forceUpdate || previousSuggestions.size() < suggestionSources.size() || !updateList.isEmpty()) {
             // Found new suggestions
             updateSuggestionSources(suggestionSources, new Callback() {
 
@@ -74,7 +74,7 @@ public class SuggestionManager {
         }
     }
 
-   public ArrayList<SuggestionBatch> getSuggestions(ArrayList<SuggestionSource> suggestionSources) {
+   public ArrayList<SuggestionBatch> getSuggestions(ArrayList<SuggestionSource> suggestionSources, boolean forceUpdate) {
 
        ArrayList<SuggestionBatch> updateList = new ArrayList<SuggestionBatch>();
 
@@ -88,8 +88,8 @@ public class SuggestionManager {
 
            ArrayList<CalendarSuggestion> suggestions = new CalendarManager().getEventsFromCalendar(context, calendar.getName());
 
-           // If new suggestions were found, update in memory cache and send new results to backend
-           if(hasNewMeetings(calendar.getName(), suggestions)) {
+           // If new suggestions were found or if user has pressed 'Sync now', update in memory cache and send new results to backend
+           if(hasNewMeetings(calendar.getName(), suggestions) || forceUpdate) {
                previousSuggestions.put(calendar.getName(), suggestions);
 
                updateList.add(new SuggestionBatch(containerName, "phone", androidId, calendar.getName(), calendar.getName(), calendar.getIsPrimary(), todayEpoch, threeMonthsFromNowEpoch, suggestions));

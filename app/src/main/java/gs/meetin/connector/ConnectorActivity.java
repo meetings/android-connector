@@ -92,9 +92,9 @@ public class ConnectorActivity extends Activity {
                 break;
 
             case SET_LAST_SYNC_TIME:
-                sessionManager.setLastSync(event.getLastSync());
+                sessionManager.setLastSync(event.getLong("lastSync"));
                 TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
-                lastSyncDate.setText(DateHelper.EpochToDateTimeString(event.getLastSync()));
+                lastSyncDate.setText(DateHelper.EpochToDateTimeString(event.getLong("lastSync")));
 
                 break;
         }
@@ -137,7 +137,10 @@ public class ConnectorActivity extends Activity {
             @Override
             public void onClick(View view) {
                 EventBus.getDefault().post(new UIEvent(SET_BUTTONS_DISABLED));
-                EventBus.getDefault().post(new SuggestionEvent(UPDATE_SUGGESTIONS));
+
+                SuggestionEvent suggestionEvent = new SuggestionEvent(UPDATE_SUGGESTIONS);
+                suggestionEvent.putBoolean("forceUpdate", true);
+                EventBus.getDefault().post(suggestionEvent);
             }
         });
     }

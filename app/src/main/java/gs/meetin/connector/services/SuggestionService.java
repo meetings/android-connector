@@ -71,7 +71,11 @@ public class SuggestionService {
                         }
                     }
                 }
-                EventBus.getDefault().post(new UIEvent(SET_LAST_SYNC_TIME, lastSync));
+
+                UIEvent uiEvent = new UIEvent(SET_LAST_SYNC_TIME);
+                uiEvent.putLong("lastSync", lastSync);
+
+                EventBus.getDefault().post(uiEvent);
             }
 
             @Override
