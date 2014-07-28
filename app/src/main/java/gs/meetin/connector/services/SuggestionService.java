@@ -24,6 +24,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Header;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.mime.MimeUtil;
@@ -39,14 +41,17 @@ public class SuggestionService {
     private SuggestionRouter suggestionService;
 
     public interface SuggestionRouter {
+        @Headers( { "x-meetings-unmanned: {unmanned}" } )
         @GET("/users/{userId}/suggestion_sources")
-        void getSources(@Path("userId") String userId, Callback<List<SuggestionSource>> cb);
+        void getSources(@Header("unmanned") String unmanned, @Path("userId") String userId, Callback<List<SuggestionSource>> cb);
 
+        @Headers( { "x-meetings-unmanned: {unmanned}" } )
         @POST("/users/{userId}/suggestion_sources/set_container_batch")
-        void updateSources(@Path("userId") String userId, @Body SourceContainer body, Callback<SourceContainer> cb);
+        void updateSources(@Header("unmanned") String unmanned, @Path("userId") String userId, @Body SourceContainer body, Callback<SourceContainer> cb);
 
+        @Headers( { "x-meetings-unmanned: {unmanned}" } )
         @POST("/users/{userId}/suggested_meetings/set_for_source_batch")
-        void updateSuggestions(@Path("userId") String userId, @Body SuggestionBatch body, Callback<SuggestionBatch> cb);
+        void updateSuggestions(@Header("unmanned") String unmanned, @Path("userId") String userId, @Body SuggestionBatch body, Callback<SuggestionBatch> cb);
 
     }
 
@@ -55,8 +60,8 @@ public class SuggestionService {
         this.userId = userId;
     }
 
-    public void getSources() {
-        suggestionService.getSources(userId, new Callback<List<SuggestionSource>>() {
+    public void getSources(short unmanned) {
+        suggestionService.getSources(String.valueOf(unmanned), userId, new Callback<List<SuggestionSource>>() {
             @Override
             public void success(List<SuggestionSource> result, Response response) {
                 Log.d("Mtn.gs", "Fetched sources successfully");
@@ -104,8 +109,8 @@ public class SuggestionService {
         });
     }
 
-    public void updateSources(SourceContainer sourceContainer, final Callback cb) {
-        suggestionService.updateSources(userId, sourceContainer, new Callback<SourceContainer>() {
+    public void updateSources(short unmanned, SourceContainer sourceContainer, final Callback cb) {
+        suggestionService.updateSources(String.valueOf(unmanned), userId, sourceContainer, new Callback<SourceContainer>() {
             @Override
             public void success(SourceContainer result, Response response) {
 
@@ -127,8 +132,8 @@ public class SuggestionService {
         });
     }
 
-    public void updateSuggestions(SuggestionBatch batch) {
-        suggestionService.updateSuggestions(userId, batch, new Callback<SuggestionBatch>() {
+    public void updateSuggestions(short unmanned, SuggestionBatch batch) {
+        suggestionService.updateSuggestions(String.valueOf(unmanned), userId, batch, new Callback<SuggestionBatch>() {
             @Override
             public void success(SuggestionBatch result, Response response) {
 

@@ -47,19 +47,21 @@ public class SuggestionManager {
         androidId = Device.getAndroidId(context.getContentResolver());
     }
 
-     public boolean update(boolean forceUpdate) {
+    public boolean update(boolean forceUpdate) {
+        final short unmanned = (short) (forceUpdate ? 0 : 1);
+
         ArrayList<SuggestionSource> suggestionSources = new CalendarManager().getCalendars(context);
 
         final ArrayList<SuggestionBatch> updateList = getSuggestions(suggestionSources, forceUpdate);
 
         if(forceUpdate || previousSuggestions.size() < suggestionSources.size() || !updateList.isEmpty()) {
             // Found new suggestions
-            updateSuggestionSources(suggestionSources, new Callback() {
+            updateSuggestionSources(unmanned, suggestionSources, new Callback() {
 
                 @Override
                 public void success(Object o, Response response) {
-                    updateSuggestions(updateList);
-                    suggestionService.getSources();
+                    updateSuggestions(unmanned, updateList);
+                    suggestionService.getSources(unmanned);
                 }
 
                 @Override
@@ -89,7 +91,7 @@ public class SuggestionManager {
            ArrayList<CalendarSuggestion> suggestions = new CalendarManager().getEventsFromCalendar(context, calendar.getName());
 
            // If new suggestions were found or if user has pressed 'Sync now', update in memory cache and send new results to backend
-           if(hasNewMeetings(calendar.getName(), suggestions) || forceUpdate) {
+           if(forceUpdate || hasNewMeetings(calendar.getName(), suggestions)) {
                previousSuggestions.put(calendar.getName(), suggestions);
 
                updateList.add(new SuggestionBatch(containerName, "phone", androidId, calendar.getName(), calendar.getName(), calendar.getIsPrimary(), todayEpoch, threeMonthsFromNowEpoch, suggestions));
@@ -99,22 +101,23 @@ public class SuggestionManager {
        return updateList;
     }
 
-    public void updateSuggestionSources(ArrayList<SuggestionSource> suggestionSources, Callback cb) {
+    public void updateSuggestionSources(short unmanned, ArrayList<SuggestionSource> suggestionSources, Callback cb) {
         SourceContainer sourceContainer = new SourceContainer(containerName, "phone", androidId, suggestionSources);
 
-        suggestionService.updateSources(sourceContainer, cb);
+        suggestionService.updateSources(unmanned, sourceContainer, cb);
     }
 
     // Send an empty suggestion source list to remove suggestion sources from backend
     public void removeSuggestionSources() {
-        updateSuggestionSources(new ArrayList<SuggestionSource>(), null);
+        short unmanned = 0;
+        updateSuggestionSources(unmanned, new ArrayList<SuggestionSource>(), null);
     }
 
-    public void updateSuggestions(ArrayList<SuggestionBatch> updateList) {
+    public void updateSuggestions(short unmanned, ArrayList<SuggestionBatch> updateList) {
         for(Iterator<SuggestionBatch> itBatch = updateList.iterator(); itBatch.hasNext();) {
             SuggestionBatch batch = itBatch.next();
 
-            suggestionService.updateSuggestions(batch);
+            suggestionService.updateSuggestions(unmanned, batch);
         }
     }
 
