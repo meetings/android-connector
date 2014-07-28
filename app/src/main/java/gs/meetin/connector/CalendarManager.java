@@ -20,6 +20,8 @@ import gs.meetin.connector.utils.DateHelper;
 
 public class CalendarManager {
 
+    private final String TAG = this.getClass().getName();
+
     // Projection arrays. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     public static final String[] CALENDAR_PROJECTION = new String[] {
@@ -66,7 +68,7 @@ public class CalendarManager {
     private static final int PROJECTION_ATTENDEE_EMAIL_INDEX = 2;
 
     public ArrayList<SuggestionSource> getCalendars(Context context) {
-        Log.d("Mtn.gs", "Reading calendars...");
+        Log.d(TAG, "Reading calendars...");
 
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Calendars.CONTENT_URI;
@@ -74,7 +76,7 @@ public class CalendarManager {
 
         Cursor cur = cr.query(uri, CALENDAR_PROJECTION, selection, null, null);
 
-        Log.d("Mtn.gs", "Found "+ cur.getCount() + " calendars");
+        Log.d(TAG, "Found "+ cur.getCount() + " calendars");
 
         ArrayList<SuggestionSource> sources = new ArrayList<SuggestionSource>();
 
@@ -94,7 +96,7 @@ public class CalendarManager {
     }
 
     public ArrayList<CalendarSuggestion> getEventsFromCalendar(Context context, String calendarName) {
-        Log.d("Mtn.gs", "Reading events from " + calendarName);
+        Log.d(TAG, "Reading events from " + calendarName);
 
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Events.CONTENT_URI;
@@ -111,7 +113,7 @@ public class CalendarManager {
 
         Cursor cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
 
-        Log.d("Mtn.gs", "Found "+ cur.getCount() + " events");
+        Log.d(TAG, "Found "+ cur.getCount() + " events");
 
          ArrayList<CalendarSuggestion> suggestions = new ArrayList<CalendarSuggestion>();
 
@@ -153,7 +155,7 @@ public class CalendarManager {
     }
 
     private ArrayList<Attendee> getAttendeesForEvent(Context context, long eventId) {
-        Log.d("Mtn.gs", "Reading attendees for " + eventId);
+        Log.d(TAG, "Reading attendees for " + eventId);
 
         ContentResolver cr = context.getContentResolver();
         Uri uri = CalendarContract.Attendees.CONTENT_URI;
@@ -163,7 +165,7 @@ public class CalendarManager {
 
         Cursor cur = cr.query(uri, ATTENDEE_PROJECTION, selection, selectionArgs, null);
 
-        Log.d("Mtn.gs", "Found "+ cur.getCount() + " attendees");
+        Log.d(TAG, "Found "+ cur.getCount() + " attendees");
 
         ArrayList<Attendee> attendees = new ArrayList<Attendee>();
 
