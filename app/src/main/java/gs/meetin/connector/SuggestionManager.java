@@ -33,6 +33,8 @@ public class SuggestionManager {
     private String containerName;
     private String androidId;
 
+    private int updateSuggestionsSuccessCounter;
+
     public SuggestionManager(Context context, SessionManager sessionManager) {
         this.context = context;
 
@@ -56,6 +58,7 @@ public class SuggestionManager {
 
         if (forceUpdate || previousSuggestions.size() < suggestionSources.size() || !updateList.isEmpty()) {
             // Found new suggestions
+            updateSuggestionsSuccessCounter = 0;
             updateSuggestionSources(unmanned, suggestionSources, onSuggestionSourcesUpdated(unmanned, updateList));
 
             return true;
@@ -101,7 +104,7 @@ public class SuggestionManager {
 
     public void updateSuggestions(short unmanned, ArrayList<SuggestionBatch> updateList) {
         for (SuggestionBatch batch : updateList) {
-            suggestionService.updateSuggestions(unmanned, batch, onSuggestionsUpdated(batch));
+            suggestionService.updateSuggestions(unmanned, batch, onSuggestionsUpdated(unmanned, batch, updateList.size()));
         }
     }
 
@@ -129,7 +132,6 @@ public class SuggestionManager {
             @Override
             public void success(Object o, Response response) {
                 updateSuggestions(unmanned, updateList);
-                suggestionService.getSources(unmanned);
 
             }
 
@@ -140,14 +142,21 @@ public class SuggestionManager {
         };
     }
 
-    private Callback onSuggestionsUpdated(final SuggestionBatch batch) {
+    private Callback onSuggestionsUpdated(final short unmanned, final SuggestionBatch batch, final int updateListSize) {
         return new Callback() {
 
             @Override
             public void success(Object o, Response response) {
 
-                // On successful update, save suggestions to cache
+                // Save suggestions to cache on successful update
                 previousSuggestions.put(batch.getSourceName(), batch.getSuggestions());
+
+                updateSuggestionsSuccessCounter++;
+
+                // Get updated sources on last success to update last sync time
+                if (updateSuggestionsSuccessCounter == updateListSize){
+                    suggestionService.getSources(unmanned);
+                }
             }
 
             @Override
