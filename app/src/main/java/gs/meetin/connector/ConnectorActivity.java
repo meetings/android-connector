@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -38,17 +39,19 @@ public class ConnectorActivity extends Activity {
         EventBus.getDefault().register(this);
 
         sessionManager = new SessionManager(this);
+        
         if(!sessionManager.isLoggedIn()) {
 
             sessionManager.signOut();
 
         } else {
 
+            startCalendarService();
+
             setButtonListeners();
 
             TextView userEmail = (TextView) findViewById(R.id.textUserEmail);
             userEmail.setText(sessionManager.getUserEmail());
-
 
             long lastSync = sessionManager.getLastSync();
             TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
@@ -57,8 +60,6 @@ public class ConnectorActivity extends Activity {
             } else {
                 lastSyncDate.setText(R.string.never);
             }
-
-            startCalendarService();
         }
     }
 
@@ -92,6 +93,7 @@ public class ConnectorActivity extends Activity {
                 break;
 
             case SET_LAST_SYNC_TIME:
+                Log.d("Mtn.gs", "Sync time refresh " + DateHelper.EpochToDateTimeString(event.getLong("lastSync")));
                 sessionManager.setLastSync(event.getLong("lastSync"));
                 TextView lastSyncDate = (TextView) findViewById(R.id.lastSyncDate);
                 lastSyncDate.setText(DateHelper.EpochToDateTimeString(event.getLong("lastSync")));
