@@ -20,7 +20,7 @@ import retrofit.mime.TypedInput;
 
 public class SessionAdapter {
 
-    public static RestAdapter build (final String userId, final String token) {
+    public static RestAdapter build (final String userId, final String token, final String appVersion) {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
@@ -33,7 +33,7 @@ public class SessionAdapter {
                         request.addHeader("dic", token);
                         request.addHeader("User-Agent", System.getProperty( "http.agent" ));
                         request.addHeader("x-expect-http-errors-for-rest", "1");
-                        request.addHeader("x-meetings-version", "1.0.0-beta.1 Android Connector");
+                        request.addHeader("x-meetings-app-version", appVersion + " Android Connector");
                     }
                 })
                 .setConverter(new GsonConverter(gson))

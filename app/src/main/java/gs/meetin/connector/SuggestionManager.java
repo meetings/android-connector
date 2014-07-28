@@ -15,7 +15,6 @@ import gs.meetin.connector.dto.CalendarSuggestion;
 import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionBatch;
 import gs.meetin.connector.dto.SuggestionSource;
-import gs.meetin.connector.events.SuggestionEvent;
 import gs.meetin.connector.services.SuggestionService;
 import gs.meetin.connector.utils.DateHelper;
 import gs.meetin.connector.utils.Device;
@@ -38,7 +37,9 @@ public class SuggestionManager {
     public SuggestionManager(Context context, SessionManager sessionManager) {
         this.context = context;
 
-        RestAdapter sessionAdapter = SessionAdapter.build(sessionManager.getUserId(), sessionManager.getToken());
+        String appVersion = Device.appVersion(context);
+
+        RestAdapter sessionAdapter = SessionAdapter.build(sessionManager.getUserId(), sessionManager.getToken(), appVersion);
         suggestionService = new SuggestionService(sessionAdapter, sessionManager.getUserId());
 
         previousSuggestions = new HashMap<String, ArrayList<CalendarSuggestion>>();
