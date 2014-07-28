@@ -9,18 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Iterator;
-import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.SessionEvent;
 import gs.meetin.connector.events.SuggestionEvent;
 import gs.meetin.connector.events.UIEvent;
 import gs.meetin.connector.utils.DateHelper;
-import gs.meetin.connector.utils.Device;
 import gs.meetin.connector.utils.Dialogs;
 
 import static gs.meetin.connector.events.Event.EventType.SET_BUTTONS_DISABLED;
@@ -39,7 +33,7 @@ public class ConnectorActivity extends Activity {
         EventBus.getDefault().register(this);
 
         sessionManager = new SessionManager(this);
-        
+
         if(!sessionManager.isLoggedIn()) {
 
             sessionManager.signOut();
@@ -148,15 +142,11 @@ public class ConnectorActivity extends Activity {
     }
 
     private void startCalendarService() {
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-
         Intent serviceIntent = new Intent(this, ConnectorService.class);
         startService(serviceIntent);
     }
 
     private void stopCalendarService() {
-        Toast.makeText(this, "service stopping", Toast.LENGTH_SHORT).show();
-
         Intent serviceIntent = new Intent(this, ConnectorService.class);
         stopService(serviceIntent);
     }
