@@ -15,7 +15,6 @@ import gs.meetin.connector.dto.SourceContainer;
 import gs.meetin.connector.dto.SuggestionBatch;
 import gs.meetin.connector.dto.SuggestionSource;
 import gs.meetin.connector.events.ErrorEvent;
-import gs.meetin.connector.events.SuggestionEvent;
 import gs.meetin.connector.events.UIEvent;
 import gs.meetin.connector.utils.Device;
 import retrofit.Callback;
@@ -32,8 +31,8 @@ import retrofit.mime.MimeUtil;
 import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedInput;
 
-import static gs.meetin.connector.events.Event.EventType.SET_LAST_SYNC_TIME;
 import static gs.meetin.connector.events.Event.EventType.SET_BUTTONS_ENABLED;
+import static gs.meetin.connector.events.Event.EventType.SET_LAST_SYNC_TIME;
 
 public class SuggestionService {
 
@@ -121,6 +120,7 @@ public class SuggestionService {
                 Log.d("Mtn.gs", "Updated sources successfully");
 
                 if (cb != null)
+                    // Null parameters because only information about successful request is needed
                     cb.success(null, null);
             }
 
@@ -132,7 +132,7 @@ public class SuggestionService {
         });
     }
 
-    public void updateSuggestions(short unmanned, SuggestionBatch batch) {
+    public void updateSuggestions(short unmanned, SuggestionBatch batch, final Callback cb) {
         suggestionService.updateSuggestions(String.valueOf(unmanned), userId, batch, new Callback<SuggestionBatch>() {
             @Override
             public void success(SuggestionBatch result, Response response) {
@@ -143,6 +143,9 @@ public class SuggestionService {
                 }
 
                 Log.d("Mtn.gs", "Suggestion batch updated successfully");
+
+                // Null parameters because only information about successful request is needed
+                cb.success(null, null);
             }
 
             @Override

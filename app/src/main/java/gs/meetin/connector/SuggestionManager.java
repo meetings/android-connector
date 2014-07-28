@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import gs.meetin.connector.adapters.SessionAdapter;
@@ -55,21 +54,9 @@ public class SuggestionManager {
 
         final ArrayList<SuggestionBatch> updateList = getSuggestions(suggestionSources, forceUpdate);
 
-        if(forceUpdate || previousSuggestions.size() < suggestionSources.size() || !updateList.isEmpty()) {
+        if (forceUpdate || previousSuggestions.size() < suggestionSources.size() || !updateList.isEmpty()) {
             // Found new suggestions
-            updateSuggestionSources(unmanned, suggestionSources, new Callback() {
-
-                @Override
-                public void success(Object o, Response response) {
-                    updateSuggestions(unmanned, updateList);
-                    suggestionService.getSources(unmanned);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e("Mtn.gs", error.getMessage());
-                }
-            });
+            updateSuggestionSources(unmanned, suggestionSources, onSuggestionSourcesUpdated(unmanned, updateList));
 
             return true;
         } else {
@@ -77,29 +64,27 @@ public class SuggestionManager {
         }
     }
 
-   public ArrayList<SuggestionBatch> getSuggestions(ArrayList<SuggestionSource> suggestionSources, boolean forceUpdate) {
+    public ArrayList<SuggestionBatch> getSuggestions(ArrayList<SuggestionSource> suggestionSources, boolean forceUpdate) {
 
-       ArrayList<SuggestionBatch> updateList = new ArrayList<SuggestionBatch>();
+        ArrayList<SuggestionBatch> updateList = new ArrayList<SuggestionBatch>();
 
-       DateTime todayDateTime = DateHelper.today();
-       long todayEpoch = todayDateTime.getMillis() / 1000;
-       long threeMonthsFromNowEpoch = todayDateTime.plusMonths(3).getMillis() / 1000;
-       
-       for(Iterator<SuggestionSource> source = suggestionSources.iterator(); source.hasNext();) {
+        DateTime todayDateTime = DateHelper.today();
+        long todayEpoch = todayDateTime.getMillis() / 1000;
+        long threeMonthsFromNowEpoch = todayDateTime.plusMonths(3).getMillis() / 1000;
 
-           SuggestionSource calendar = source.next();
+        for (SuggestionSource calendar : suggestionSources) {
 
-           ArrayList<CalendarSuggestion> suggestions = new CalendarManager().getEventsFromCalendar(context, calendar.getName());
+            ArrayList<CalendarSuggestion> suggestions = new CalendarManager().getEventsFromCalendar(context, calendar.getName());
 
-           // If new suggestions were found or if user has pressed 'Sync now', update in memory cache and send new results to backend
-           if(forceUpdate || hasNewMeetings(calendar.getName(), suggestions)) {
-               previousSuggestions.put(calendar.getName(), suggestions);
+            // If new suggestions were found or if user has pressed 'Sync now', send new results to backend
+            if (forceUpdate || hasNewMeetings(calendar.getName(), suggestions)) {
+//                previousSuggestions.put(calendar.getName(), suggestions);
 
-               updateList.add(new SuggestionBatch(containerName, "phone", androidId, calendar.getName(), calendar.getName(), calendar.getIsPrimary(), todayEpoch, threeMonthsFromNowEpoch, suggestions));
-           }
-       }
+                updateList.add(new SuggestionBatch(containerName, "phone", androidId, calendar.getName(), calendar.getName(), calendar.getIsPrimary(), todayEpoch, threeMonthsFromNowEpoch, suggestions));
+            }
+        }
 
-       return updateList;
+        return updateList;
     }
 
     public void updateSuggestionSources(short unmanned, ArrayList<SuggestionSource> suggestionSources, Callback cb) {
@@ -115,10 +100,8 @@ public class SuggestionManager {
     }
 
     public void updateSuggestions(short unmanned, ArrayList<SuggestionBatch> updateList) {
-        for(Iterator<SuggestionBatch> itBatch = updateList.iterator(); itBatch.hasNext();) {
-            SuggestionBatch batch = itBatch.next();
-
-            suggestionService.updateSuggestions(unmanned, batch);
+        for (SuggestionBatch batch : updateList) {
+            suggestionService.updateSuggestions(unmanned, batch, onSuggestionsUpdated(batch));
         }
     }
 
@@ -127,7 +110,7 @@ public class SuggestionManager {
 
         ArrayList<CalendarSuggestion> previous = previousSuggestions.get(calendarName);
 
-        if(previous == null) {
+        if (previous == null) {
             return true;
         }
 
@@ -138,5 +121,39 @@ public class SuggestionManager {
         newList.removeAll(previous);
 
         return !newList.isEmpty() || !previousList.isEmpty();
+    }
+
+    private Callback onSuggestionSourcesUpdated(final short unmanned, final ArrayList<SuggestionBatch> updateList) {
+        return new Callback() {
+
+            @Override
+            public void success(Object o, Response response) {
+                updateSuggestions(unmanned, updateList);
+                suggestionService.getSources(unmanned);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("Mtn.gs", error.getMessage());
+            }
+        };
+    }
+
+    private Callback onSuggestionsUpdated(final SuggestionBatch batch) {
+        return new Callback() {
+
+            @Override
+            public void success(Object o, Response response) {
+
+                // On successful update, save suggestions to cache
+                previousSuggestions.put(batch.getSourceName(), batch.getSuggestions());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("Mtn.gs", error.getMessage());
+            }
+        };
     }
 }

@@ -34,4 +34,12 @@ public class SuggestionBatch extends MtnResponse {
         this.timespanEndEpoch = timespanEndEpoch;
         this.suggestions = suggestions;
     }
+
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public ArrayList<CalendarSuggestion> getSuggestions() {
+        return suggestions;
+    }
 }
