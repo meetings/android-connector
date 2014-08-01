@@ -11,6 +11,7 @@
         <receiver android:name=".AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="restartService" />
             </intent-filter>
         </receiver>
 

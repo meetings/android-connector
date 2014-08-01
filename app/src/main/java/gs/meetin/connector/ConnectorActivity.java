@@ -61,6 +61,7 @@ public class ConnectorActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        sendBroadcast(new Intent("restartService"));
     }
 
     public void onEvent(SessionEvent event) {
