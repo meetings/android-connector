@@ -27,22 +27,12 @@
         android:id="@+id/innerConnectorLayout"
         android:layout_centerHorizontal="true">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/logoMain"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/logo2"
-            android:paddingTop="70dp"
-            android:paddingBottom="70dp" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lastSync"
             android:id="@+id/lastSync"
-            android:layout_below="@+id/logoMain"
+            android:layout_alignParentTop="true"
             android:paddingRight="4dp"
             android:paddingBottom="10dp"/>
 
@@ -51,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="@string/never"
             android:id="@+id/lastSyncDate"
-            android:layout_below="@+id/logoMain"
+            android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/lastSync" />
 
         <Button
