@@ -22,14 +22,15 @@
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin_top"
+        android:paddingBottom="@dimen/activity_vertical_margin_bottom"
         android:id="@+id/innerConnectorLayout"
         android:layout_centerHorizontal="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/medium_grey2"
             android:text="@string/lastSync"
             android:id="@+id/lastSync"
             android:layout_alignParentTop="true"
@@ -39,6 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/medium_grey2"
             android:text="@string/never"
             android:id="@+id/lastSyncDate"
             android:layout_alignParentTop="true"
@@ -55,6 +57,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/medium_grey2"
             android:text="@string/loggedInAs"
             android:id="@+id/textLoggedIn"
             android:paddingRight="4dp"
@@ -63,6 +66,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/medium_grey2"
             android:text="tuomas@meetin.gs"
             android:id="@+id/textUserEmail"
             android:layout_below="@+id/textLoggedIn"
