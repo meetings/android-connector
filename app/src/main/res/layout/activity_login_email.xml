@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/meetings_blue"
-    tools:context="gs.meetin.connector.LoginEmailActivity">
+    tools:context="gs.meetin.cmeet.LoginEmailActivity">
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"

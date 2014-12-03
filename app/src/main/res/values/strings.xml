@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Meetin.gs connector</string>
+    <string name="app_name">cMeet connector</string>
 
     <!-- Buttons -->
     <string name="syncNow">Synchronize now</string>
@@ -16,9 +16,9 @@
     <string name="loggedInAs">This device is connected to your account:</string>
     <string name="lastSync">Last synchronized:</string>
     <string name="never">Never</string>
-    <string name="loginInfo">With this connector app you can synchronize your device\'s calendar with your Meetin.gs account and import your calendar events to Meetin.gs.</string>
+    <string name="loginInfo">With this connector app you can synchronize your device\'s calendar with your cMeet account and import your calendar events to cMeet.</string>
     <string name="inputEmail">Enter your email address</string>
-    <string name="createAccount">Not registered with Meetin.gs? Create an account here.</string>
+    <string name="createAccount">Not registered with cMeet? Create an account here.</string>
     <string name="pinSent">We have just sent you a pin code to this address:</string>
 
     <!-- Alerts -->
@@ -28,6 +28,6 @@
     <string name="unknown_email_title">Unknown email address</string>
     <string name="unknown_email_message">We could not find an account with this email address. Would you like to create a new account?</string>
     <string name="disconnect_title">Disconnect?</string>
-    <string name="disconnect_message">Disconnecting your device\'s calendar will remove imported information from Meetin.gs.</string>
+    <string name="disconnect_message">Disconnecting your device\'s calendar will remove imported information from cMeet.</string>
 
 </resources>

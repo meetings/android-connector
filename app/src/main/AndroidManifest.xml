@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="gs.meetin.connector" >
+    package="gs.meetin.cmeet" >
 
     <application
         android:allowBackup="true"
@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <receiver android:name=".AutoStart">
+        <receiver android:name="gs.meetin.cmeet.AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="restartService" />
@@ -16,7 +16,7 @@
         </receiver>
 
         <activity
-            android:name=".ConnectorActivity"
+            android:name="gs.meetin.cmeet.ConnectorActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -27,18 +27,18 @@
         </activity>
 
         <service
-            android:name=".ConnectorService"
+            android:name="gs.meetin.cmeet.ConnectorService"
             android:enabled="true"
             android:exported="false" >
         </service>
 
         <activity
-            android:name=".LoginEmailActivity"
+            android:name="gs.meetin.cmeet.LoginEmailActivity"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".LoginPinActivity"
+            android:name="gs.meetin.cmeet.LoginPinActivity"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" >
         </activity>
